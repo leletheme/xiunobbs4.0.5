@@ -42,6 +42,9 @@ if($threadlist) {
 		$thread['brief'] = $brief;
 	}
 	unset($thread);
+	if($page == 1) {
+		$threadlist = thread_special_sort($threadlist, $orderby);
+	}
 }
 
 $forum_hot_threadlist = thread_find(array('fid'=>$fid), array('views'=>-1, 'posts'=>-1, 'lastpid'=>-1), 1, 8);
