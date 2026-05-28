@@ -14,6 +14,10 @@
 						<!--{hook thread_subject_before.htm}-->
 						<h4 class="break-all">
 							<!--{hook thread_subject_start.htm}-->
+							<?php if($thread['top'] > 0) { ?><span class="bbs-thread-detail-label bbs-thread-detail-label-top">置顶</span><?php } ?>
+							<?php if(!empty($thread['recommend'])) { ?><span class="bbs-thread-detail-label bbs-thread-detail-label-recommend">首页推荐</span><?php } ?>
+							<?php if(!empty($thread['digest'])) { ?><span class="bbs-thread-detail-label bbs-thread-detail-label-digest">精华</span><?php } ?>
+							<?php if(!empty($thread['mod_recommend'])) { ?><span class="bbs-thread-detail-label bbs-thread-detail-label-mod">版主推荐</span><?php } ?>
 							<?php echo $thread['subject'];?>
 							<!--{hook thread_subject_end.htm}-->
 						</h4>
