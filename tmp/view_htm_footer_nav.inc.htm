@@ -1,0 +1,18 @@
+<footer class="bbs-footer" id="footer">
+	<div class="container bbs-footer-container">
+		<div class="bbs-footer-inner">
+			<div class="bbs-footer-brand">
+				
+				<span>Powered by</span>
+				<a href="http://bbs.xiuno.com/" target="_blank"><b>Xiuno BBS</b><em><?php echo $conf['version'];?></em></a>
+				
+			</div>
+			<div class="bbs-footer-meta">
+				
+				<span>Processed <b><?php echo substr(microtime(1) - $starttime, 0, 5);?></b></span>
+				<span>SQL <b><?php echo count($db->sqls);?></b></span>
+				
+			</div>
+		</div>
+	</div>
+</footer>

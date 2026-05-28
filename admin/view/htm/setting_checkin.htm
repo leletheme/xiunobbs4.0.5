@@ -1,0 +1,97 @@
+<?php include _include(ADMIN_PATH.'view/htm/header.inc.htm');?>
+
+<div class="row">
+	<div class="col-lg-12">
+		<div class="btn-group mb-3" role="group">
+			<?php echo admin_tab_active($menu['setting']['tab'], 'checkin');?>
+		</div>
+		<div class="card">
+			<div class="card-body">
+				<form action="<?php echo url('setting-checkin');?>" method="post" id="form">
+					<div class="form-group row">
+						<label class="col-sm-2 form-control-label">启用签到：</label>
+						<div class="col-sm-10">
+							<?php echo $input['enable'];?>
+							<p class="mt-2 text-grey small">关闭后首页不显示签到卡片，前端也无法签到。</p>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label class="col-sm-2 form-control-label">奖励规则：</label>
+						<div class="col-sm-10">
+							<div class="table-responsive">
+								<table class="table table-bordered mb-2" style="min-width: 680px">
+									<thead>
+										<tr>
+											<th width="120">启用</th>
+											<th>币种</th>
+											<th width="180">基础奖励</th>
+											<th width="180">连续奖励</th>
+										</tr>
+									</thead>
+									<tbody>
+									<?php foreach($reward_types as $_type=>$_name) { ?>
+										<tr>
+											<td><label class="custom-input custom-checkbox"><input type="checkbox" name="reward_types[]" value="<?php echo $_type;?>"<?php echo in_array($_type, $setting['reward_types']) ? ' checked' : ''; ?>> <span>启用</span></label></td>
+											<td><?php echo $_name;?></td>
+											<td><input type="text" class="form-control" name="reward_values[<?php echo $_type;?>]" value="<?php echo intval($setting['reward_values'][$_type]);?>"></td>
+											<td><input type="text" class="form-control" name="continue_rewards[<?php echo $_type;?>]" value="<?php echo intval($setting['continue_rewards'][$_type]);?>"></td>
+										</tr>
+									<?php } ?>
+									</tbody>
+								</table>
+							</div>
+							<p class="mt-2 text-grey small">可同时启用多个币种；签到时会分别发放对应基础奖励和连续奖励。</p>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label class="col-sm-2 form-control-label">连续奖励上限：</label>
+						<div class="col-sm-10">
+							<?php echo $input['continue_max'];?>
+							<p class="mt-2 text-grey small">连续奖励最多累计多少天，避免奖励无限增长。</p>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label class="col-sm-2 form-control-label">日历记录天数：</label>
+						<div class="col-sm-10">
+							<?php echo $input['calendar_days'];?>
+							<p class="mt-2 text-grey small">预留配置项，当前首页按自然月显示签到日历。</p>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label class="col-sm-2 form-control-label"></label>
+						<div class="col-sm-10">
+							<button type="submit" class="btn btn-primary btn-block" id="submit" data-loading-text="<?php echo lang('submiting');?>..."><?php echo lang('confirm');?></button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+
+<?php include _include(ADMIN_PATH.'view/htm/footer.inc.htm');?>
+
+<script>
+var jform = $('#form');
+var jsubmit = $('#submit');
+jform.on('submit', function() {
+	jform.reset();
+	jsubmit.button('loading');
+	var postdata = jform.serialize();
+	$.xpost(jform.attr('action'), postdata, function(code, message) {
+		if(code == 0) {
+			$.alert(message);
+			jsubmit.text(message).delay(1000).button('reset');
+		} else if(xn.is_number(code)) {
+			alert(message);
+			jsubmit.button('reset');
+		} else {
+			jform.find('[name="'+code+'"]').alert(message).focus();
+			jsubmit.button('reset');
+		}
+	});
+	return false;
+});
+
+$('#nav li.nav-item-setting').addClass('active');
+</script>

@@ -1,0 +1,107 @@
+<?php include _include(ADMIN_PATH.'view/htm/header.inc.htm');?>
+
+<div class="row">
+	<div class="col-lg-12">
+		<div class="btn-group mb-3" role="group">
+			<?php echo admin_tab_active($menu['setting']['tab'], 'quickbar');?>
+		</div>
+		<div class="card">
+			<div class="card-body">
+				<form action="<?php echo url('setting-quickbar');?>" method="post" id="form">
+					<div class="form-group row">
+						<label class="col-sm-2 form-control-label">启用快捷按钮：</label>
+						<div class="col-sm-10">
+							<?php echo $input['enable'];?>
+							<p class="mt-2 text-grey small">开启后，帖子详情页右侧作者卡片旁会显示快速发帖、站长微信、返回顶部按钮。</p>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label class="col-sm-2 form-control-label">微信二维码：</label>
+						<div class="col-sm-10">
+							<div class="input-group">
+								<?php echo $input['wechat_qrcode'];?>
+								<div class="input-group-append">
+									<label class="btn btn-secondary mb-0">
+										上传图片<input type="file" id="wechat_qrcode_upload" accept="image/gif,image/jpeg,image/png,image/jpg,image/bmp,image/webp" class="d-none">
+									</label>
+								</div>
+							</div>
+							<?php
+							if(!isset($quickbar_wechat_qrcode_preview)) {
+								$quickbar_wechat_qrcode_preview = $quickbar_wechat_qrcode;
+								if($quickbar_wechat_qrcode_preview && !preg_match('#^(https?:)?//#i', $quickbar_wechat_qrcode_preview) && strpos($quickbar_wechat_qrcode_preview, '../') !== 0 && strpos($quickbar_wechat_qrcode_preview, '/') !== 0) {
+									$quickbar_wechat_qrcode_preview = '../'.$quickbar_wechat_qrcode_preview;
+								}
+							}
+							?>
+							<div class="mt-3">
+								<img id="wechat_qrcode_preview" src="<?php echo $quickbar_wechat_qrcode_preview;?>" style="max-width: 160px; <?php echo $quickbar_wechat_qrcode_preview ? '' : 'display:none;'; ?>">
+							</div>
+							<p class="mt-2 text-grey small">可上传站长微信二维码，也可以直接填写外部图片地址。</p>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label class="col-sm-2 form-control-label">二维码说明：</label>
+						<div class="col-sm-10">
+							<?php echo $input['wechat_text'];?>
+							<p class="mt-2 text-grey small">鼠标移动到微信按钮上时，会显示在二维码下方。</p>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label class="col-sm-2 form-control-label"></label>
+						<div class="col-sm-10">
+							<button type="submit" class="btn btn-primary btn-block" id="submit" data-loading-text="<?php echo lang('submiting');?>..."><?php echo lang('confirm');?></button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+
+<?php include _include(ADMIN_PATH.'view/htm/footer.inc.htm');?>
+
+<script>
+var jform = $('#form');
+var jsubmit = $('#submit');
+var jqrcode = $('input[name="wechat_qrcode"]');
+var jqrcodePreview = $('#wechat_qrcode_preview');
+jform.on('submit', function() {
+	jform.reset();
+	jsubmit.button('loading');
+	var postdata = jform.serialize();
+	$.xpost(jform.attr('action'), postdata, function(code, message) {
+		if(code == 0) {
+			$.alert(message);
+			jsubmit.text(message).delay(1000).button('reset');
+		} else if(xn.is_number(code)) {
+			alert(message);
+			jsubmit.button('reset');
+		} else {
+			jform.find('[name="'+code+'"]').alert(message).focus();
+			jsubmit.button('reset');
+		}
+	});
+	return false;
+});
+
+$('#wechat_qrcode_upload').on('change', function(e) {
+	var files = xn.get_files_from_event(e);
+	if(!files || !files[0]) return;
+	xn.upload_file(files[0], 'index.php?setting-quickbar_upload', {width: 600, height: 600, filetype: 'png', water_image_url: '../view/img/water-small.png'}, function(code, message) {
+		if(code == 0) {
+			jqrcode.val(message.url);
+			var preview_url = message.url;
+			if(preview_url && preview_url.indexOf('http://') !== 0 && preview_url.indexOf('https://') !== 0 && preview_url.indexOf('//') !== 0 && preview_url.indexOf('../') !== 0 && preview_url.indexOf('/') !== 0) {
+				preview_url = '../' + preview_url;
+			}
+			jqrcodePreview.attr('src', preview_url + '?' + Math.random()).show();
+			$.alert('上传成功');
+		} else {
+			$.alert(message);
+		}
+	});
+});
+
+$('#nav li.nav-item-setting').addClass('active');
+</script>

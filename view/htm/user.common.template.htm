@@ -1,0 +1,79 @@
+<?php include _include(APP_PATH.'view/htm/header.inc.htm');?>
+
+<!--{hook user_index_start.htm}-->
+
+<!-- 手机导航 / Mobile navigation -->
+<div class="btn-group mb-3 d-lg-none" role="group" id="user_mobile_nav">
+	<!--{hook user_common_mobile_user_before.htm}-->
+	<a role="button" class="btn btn-secondary" data-active="menu-user" href="<?php echo url("user-$_uid");?>">个人资料</a>
+	<!--{hook user_common_mobile_user_after.htm}-->
+	
+	<!--{hook user_common_mobile_thread_before.htm}-->
+	<a role="button" class="btn btn-secondary" data-active="menu-user-thread" href="<?php echo url("user-thread-$_uid");?>">论坛帖子</a>
+	<!--{hook user_common_mobile_thread_after.htm}-->
+</div>
+
+<div class="row">
+
+	<!-- PC 导航 / Mobile navigation -->
+	<div class="col-lg-3 hidden-md hidden-sm" id="user_aside">
+		<div class="card bbs-profile-side-card">
+			<div class="bbs-profile-cover"></div>
+			<div class="card-body text-center bbs-profile-side-body">
+				<img class="bbs-profile-avatar" src="<?php echo $_user['avatar_url'];?>">
+				<h5><?php echo $_user['username'];?></h5>
+				<div class="bbs-profile-level"><i class="icon-star"></i><?php echo $_user['groupname'];?></div>
+				<div class="bbs-profile-stats">
+					<div><span>主题</span><strong><?php echo intval($_user['threads']);?></strong></div>
+					<div><span>回帖</span><strong><?php echo intval($_user['posts']);?></strong></div>
+					<div><span>积分</span><strong><?php echo intval($_user['credits']);?></strong></div>
+					<div><span>金币</span><strong><?php echo intval($_user['golds']);?></strong></div>
+				</div>
+				<div class="bbs-profile-posts">
+					<?php if(!empty($profile_threadlist)) { $profile_i = 1; foreach($profile_threadlist as $_thread) { ?>
+					<a href="<?php echo url("thread-$_thread[tid]");?>"><b><?php echo $profile_i++;?></b><span><?php echo $_thread['subject'];?></span><em><?php echo $_thread['create_date_fmt'];?></em></a>
+					<?php }} else { ?>
+					<div class="bbs-profile-posts-empty">暂无主题内容</div>
+					<?php } ?>
+				</div>
+				<div class="bbs-profile-more"><a href="<?php echo url("user-thread-$_uid");?>">更多作者好帖 →</a></div>
+				<!--{hook user_profile_username_after.htm}-->
+			</div>
+		</div>
+		<div class="card bbs-author-hot-card">
+			<div class="bbs-author-hot-title"><i></i>热门帖子</div>
+			<div class="bbs-author-hot-list bbs-profile-hot-list">
+				<?php if(!empty($profile_hot_threadlist)) { $hot_i = 1; foreach($profile_hot_threadlist as $_thread) { ?>
+				<a href="<?php echo url("thread-$_thread[tid]");?>"><em><?php echo $hot_i++;?></em><span><?php echo $_thread['subject'];?></span><strong><i class="icon-eye"></i><?php echo intval($_thread['views']);?></strong></a>
+				<?php }} else { ?>
+				<div class="bbs-author-hot-empty">暂无热门帖子</div>
+				<?php } ?>
+			</div>
+		</div>
+	</div>
+	<!--{hook user_common_aside_after.htm}-->
+	<div class="col-lg-9" id="user_main">
+		<!--{hook user_common_main_card_before.htm}-->
+		<div class="card">
+			<div class="card-header">
+				<!--{hook user_common_user_nav_slot_before.htm}-->
+				<slot name="user_nav" />
+				<!--{hook user_common_user_nav_slot_after.htm}-->
+			</div>
+			<div class="card-body">
+				<!--{hook user_common_body_slot_before.htm}-->
+				<slot name="user_body" />
+				<!--{hook user_common_body_slot_after.htm}-->
+			</div>
+		</div>
+		<!--{hook user_common_main_card_after.htm}-->
+	</div>
+</div>
+
+<!--{hook user_index_end.htm}-->
+
+<?php include _include(APP_PATH.'view/htm/footer.inc.htm');?>
+<script>
+$('li[data-active="bbs"]').addClass('active');
+</script>
+<!--{hook user_index_js.htm}-->

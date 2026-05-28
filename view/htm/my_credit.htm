@@ -1,0 +1,48 @@
+<template include="./view/htm/my.template.htm">
+	<slot name="my_body">
+		<div class="bbs-credit-log-head">
+			<div>
+				<h5>积分流水</h5>
+				<p>查看积分、金币、人民币的变动来源和当前余额。</p>
+			</div>
+			<div class="bbs-user-currency-grid bbs-credit-log-currency">
+				<div><i class="icon-star-o"></i><span>积分</span><strong><?php echo intval($user['credits']);?></strong></div>
+				<div><i class="icon-circle-o"></i><span>金币</span><strong><?php echo intval($user['golds']);?></strong></div>
+				<div><i class="icon-money"></i><span>人民币</span><strong><?php echo intval($user['rmbs']);?></strong></div>
+			</div>
+		</div>
+		<div class="table-responsive">
+			<table class="table table-hover bbs-credit-log-table mb-0">
+				<thead>
+					<tr>
+						<th width="110">币种</th>
+						<th width="120">变动</th>
+						<th width="120">变动后</th>
+						<th>来源</th>
+						<th width="160">时间</th>
+					</tr>
+				</thead>
+				<tbody>
+				<?php if($credit_log_list) { foreach($credit_log_list as $_log) { ?>
+					<tr>
+						<td><?php echo array_value($credit_log_types, $_log['type'], $_log['type']);?></td>
+						<td><span class="<?php echo intval($_log['change_num']) >= 0 ? 'text-success' : 'text-danger';?>"><?php echo intval($_log['change_num']) > 0 ? '+' : '';?><?php echo intval($_log['change_num']);?></span></td>
+						<td><?php echo intval($_log['after_num']);?></td>
+						<td><?php echo $_log['reason'];?></td>
+						<td><?php echo date('Y-m-d H:i', $_log['create_date']);?></td>
+					</tr>
+				<?php }} else { ?>
+					<tr><td colspan="5" class="text-center text-grey py-4">暂无积分流水</td></tr>
+				<?php } ?>
+				</tbody>
+			</table>
+		</div>
+		<?php if($pagination) { ?>
+		<nav class="mt-3"><ul class="pagination justify-content-center flex-wrap"><?php echo $pagination; ?></ul></nav>
+		<?php } ?>
+	</slot>
+</template>
+
+<script>
+$('a[data-active="my-credit"]').addClass('active');
+</script>

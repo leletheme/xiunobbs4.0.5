@@ -1,0 +1,75 @@
+<?php include _include(ADMIN_PATH.'view/htm/header.inc.htm');?>
+
+<div class="row">
+	<div class="col-lg-12">
+		<div class="btn-group mb-3" role="group">
+			<?php echo admin_tab_active($menu['setting']['tab'], 'readmore');?>
+		</div>
+		<div class="card">
+			<div class="card-body">
+				<form action="<?php echo url('setting-readmore');?>" method="post" id="form">
+					<div class="form-group row">
+						<label class="col-sm-2 form-control-label">启用阅读全文：</label>
+						<div class="col-sm-10">
+							<?php echo $input['enable'];?>
+							<p class="mt-2 text-grey small">开启后，帖子详情页首帖正文过长时会自动折叠，并显示“展开阅读全文”按钮。</p>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label class="col-sm-2 form-control-label">折叠高度：</label>
+						<div class="col-sm-10">
+							<div class="input-group">
+								<?php echo $input['height'];?>
+								<div class="input-group-append"><span class="input-group-text">px</span></div>
+							</div>
+							<p class="mt-2 text-grey small">正文触发折叠后显示的高度，建议设置为 480 - 720。</p>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label class="col-sm-2 form-control-label">触发字数：</label>
+						<div class="col-sm-10">
+							<div class="input-group">
+								<?php echo $input['length'];?>
+								<div class="input-group-append"><span class="input-group-text">字</span></div>
+							</div>
+							<p class="mt-2 text-grey small">正文纯文字长度达到该数值时才折叠，短内容不会显示阅读全文按钮。</p>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label class="col-sm-2 form-control-label">按钮文字：</label>
+						<div class="col-sm-10">
+							<?php echo $input['button_text'];?>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label class="col-sm-2 form-control-label"></label>
+						<div class="col-sm-10">
+							<button type="submit" class="btn btn-primary btn-block" id="submit" data-loading-text="<?php echo lang('submiting');?>..."><?php echo lang('confirm');?></button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+
+<?php include _include(ADMIN_PATH.'view/htm/footer.inc.htm');?>
+
+<script>
+var jform = $('#form');
+var jsubmit = $('#submit');
+jform.on('submit', function() {
+	jform.reset();
+	jsubmit.button('loading');
+	var postdata = jform.serialize();
+	$.xpost(jform.attr('action'), postdata, function(code, message) {
+		if(code == 0) {
+			$.alert(message).delay(1000).location('');
+		} else {
+			$.alert(message);
+			jsubmit.button('reset');
+		}
+	});
+	return false;
+});
+</script>

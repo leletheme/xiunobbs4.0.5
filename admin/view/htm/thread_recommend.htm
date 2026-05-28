@@ -1,0 +1,173 @@
+<?php include _include(ADMIN_PATH.'view/htm/header.inc.htm');?>
+
+<!--{hook admin_thread_recommend_start.htm}-->
+
+<div class="row">
+	<div class="col-12">
+		<div class="btn-group mb-3" role="group">
+			<?php echo admin_tab_active($menu['thread']['tab'], 'recommend');?>
+		</div>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-12">
+		<div class="card mb-3">
+			<div class="card-body">
+				<h4 class="card-title"><?php echo lang('search_condition');?></h4>
+				<form action="<?php echo url('thread-recommend');?>" method="post" id="filter_form">
+					<div class="row">
+						<div class="col-md-3 mb-2">
+							<label><?php echo lang('forum');?>：</label>
+							<select class="form-control" name="fid" id="fid">
+								<option value="0">全部版块</option>
+								<?php foreach ($forumlist as $forum) { ?>
+								<option value="<?php echo $forum['fid']; ?>"<?php echo $fid == $forum['fid'] ? ' selected' : ''; ?>><?php echo $forum['name']; ?></option>
+								<?php } ?>
+							</select>
+						</div>
+						<div class="col-md-3 mb-2">
+							<label><?php echo lang('keyword');?>：</label>
+							<input class="form-control" type="text" id="keyword" name="keyword" placeholder="<?php echo lang('keyword');?>" value="<?php echo htmlspecialchars($keyword);?>" />
+						</div>
+						<div class="col-md-2 mb-2">
+							<label><?php echo lang('user');?> ID：</label>
+							<input class="form-control" type="text" id="uid" name="uid" placeholder="<?php echo lang('uid');?>" value="<?php echo $uid ? $uid : ''; ?>" />
+						</div>
+						<div class="col-md-2 mb-2">
+							<label><?php echo lang('thread_userip');?>：</label>
+							<input class="form-control" type="text" id="userip" name="userip" placeholder="<?php echo lang('thread_userip');?>" value="<?php echo htmlspecialchars($userip);?>" />
+						</div>
+						<div class="col-md-2 mb-2">
+							<label>状态：</label>
+							<select class="form-control" name="closed" id="closed">
+								<option value="-1"<?php echo $closed < 0 ? ' selected' : ''; ?>>全部</option>
+								<option value="0"<?php echo $closed == 0 ? ' selected' : ''; ?>>打开</option>
+								<option value="1"<?php echo $closed == 1 ? ' selected' : ''; ?>>关闭</option>
+							</select>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-3 mb-2">
+							<label><?php echo lang('start_date');?>：</label>
+							<input class="form-control" type="date" id="create_date_start" name="create_date_start" value="<?php echo htmlspecialchars($create_date_start);?>" />
+						</div>
+						<div class="col-md-3 mb-2">
+							<label><?php echo lang('end_date');?>：</label>
+							<input class="form-control" type="date" id="create_date_end" name="create_date_end" value="<?php echo htmlspecialchars($create_date_end);?>" />
+						</div>
+						<div class="col-md-6 mb-2 d-flex align-items-end">
+							<button type="submit" class="btn btn-primary mr-2"><i class="icon-search"></i> <?php echo lang('search');?></button>
+							<a class="btn btn-secondary" href="<?php echo url('thread-recommend');?>">重置</a>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+		<div class="card">
+			<div class="card-header d-flex justify-content-between align-items-center">
+				<div><i class="icon-star-o"></i> 首页首屏推荐</div>
+				<div class="text-muted small">共 <?php echo intval($total);?> 条</div>
+			</div>
+			<div class="card-body">
+				<div class="table-responsive">
+					<table class="table table-hover" style="min-width: 900px">
+						<thead>
+							<tr>
+								<th width="50" class="text-center"><input type="checkbox" id="checkall"></th>
+								<th>主题</th>
+								<th width="120">版块</th>
+								<th width="110">作者</th>
+								<th width="90" class="text-center">浏览</th>
+								<th width="90" class="text-center">回复</th>
+								<th width="120">发布时间</th>
+								<th width="130" class="text-center">操作</th>
+							</tr>
+						</thead>
+						<tbody id="recommendlist">
+						<?php if($threadlist) { foreach($threadlist as $_thread) { ?>
+							<tr tid="<?php echo $_thread['tid'];?>">
+								<td class="text-center"><input type="checkbox" name="tid" value="<?php echo $_thread['tid'];?>"></td>
+								<td>
+									<a href="../<?php echo url("thread-$_thread[tid]");?>" target="_blank"><?php echo $_thread['subject'];?></a>
+									<?php if($_thread['top'] > 0) { ?><span class="badge badge-primary ml-1">置顶 <?php echo $_thread['top'];?></span><?php } ?>
+									<?php if($_thread['brief']) { ?><div class="small text-muted mt-1"><?php echo $_thread['brief'];?></div><?php } ?>
+								</td>
+								<td><?php echo $_thread['forumname'];?></td>
+								<td><?php echo $_thread['username'];?></td>
+								<td class="text-center"><?php echo intval($_thread['views']);?></td>
+								<td class="text-center"><?php echo intval($_thread['posts']);?></td>
+								<td><?php echo $_thread['create_date_fmt'];?></td>
+								<td class="text-center">
+									<a href="../<?php echo url("post-update-$_thread[firstpid]");?>" target="_blank">编辑</a>
+									<span class="text-muted mx-1">|</span>
+									<a href="javascript:void(0);" class="recommend-cancel">取消推荐</a>
+								</td>
+							</tr>
+						<?php }} else { ?>
+							<tr>
+								<td colspan="8" class="text-center text-muted py-4">暂无首页首屏推荐内容</td>
+							</tr>
+						<?php } ?>
+						</tbody>
+					</table>
+				</div>
+				<hr class="mt-0" />
+				<button type="button" class="btn btn-sm btn-danger" id="batch_cancel"><i class="icon-remove"></i> 批量取消推荐</button>
+				<a class="btn btn-sm btn-secondary ml-2" href="../" target="_blank">查看前台首页</a>
+			</div>
+		</div>
+		<nav><ul class="pagination justify-content-center mt-3"><?php echo $pagination; ?></ul></nav>
+	</div>
+</div>
+
+<!--{hook admin_thread_recommend_end.htm}-->
+
+<?php include _include(ADMIN_PATH.'view/htm/footer.inc.htm');?>
+
+<script>
+var jlist = $('#recommendlist');
+var jcheckall = $('#checkall');
+var jbatchCancel = $('#batch_cancel');
+
+jcheckall.on('change', function() {
+	jlist.find('input[name="tid"]').prop('checked', this.checked);
+});
+
+function recommend_cancel(tids, callback) {
+	$.xpost(xn.url('thread-recommend_cancel'), {tids:tids}, function(code, message) {
+		if(code != 0) return $.alert(message);
+		callback && callback(message);
+	});
+}
+
+jlist.on('click', '.recommend-cancel', function() {
+	var jtr = $(this).parents('tr');
+	var tid = jtr.attr('tid');
+	if(!window.confirm('确定取消该主题的首页首屏推荐？')) return false;
+	recommend_cancel([tid], function() {
+		jtr.remove();
+	});
+	return false;
+});
+
+jbatchCancel.on('click', function() {
+	var jchecked = jlist.find('input[name="tid"]:checked');
+	if(jchecked.length < 1) return alert('请选择需要取消推荐的主题');
+	if(!window.confirm('确定批量取消选中主题的首页首屏推荐？')) return false;
+	var tids = [];
+	jchecked.each(function() {
+		tids.push($(this).val());
+	});
+	recommend_cancel(tids, function() {
+		jchecked.each(function() {
+			$(this).parents('tr').remove();
+		});
+	});
+	return false;
+});
+
+$('#nav li.nav-item-thread').addClass('active');
+</script>
+
+<!--{hook admin_thread_recommend_js.htm}-->

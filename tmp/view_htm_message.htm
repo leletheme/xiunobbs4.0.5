@@ -1,0 +1,24 @@
+<?php include _include(APP_PATH.'view/htm/header.inc.htm');?>
+
+
+
+<div class="row">
+	<div class="col-lg-8 mx-auto">
+		<div class="card mt-4">
+			<div class="card-body">
+				<h4 class="card-title text-center mb-0">
+					<i class="icon-<?php echo $code == 0 ? 'ok' : 'warning-sign'; ?>"></i> 
+					
+					<?php echo is_array($message) ? print_r($message, 1) : $message;?>
+					
+				</h4>
+				
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+<?php include _include(APP_PATH.'view/htm/footer.inc.htm');?>
+

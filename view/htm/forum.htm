@@ -1,0 +1,155 @@
+<?php include _include(APP_PATH.'view/htm/header.inc.htm');?>
+
+<!--{hook forum_start.htm}-->
+
+<div class="bbs-feed bbs-forum-page">
+	<div class="bbs-feed-grid bbs-forum-grid">
+		<aside class="bbs-feed-left bbs-forum-left">
+			<div class="bbs-feed-left-card">
+				<?php if($forumlist_show) { foreach($forumlist_show as $_forum) { ?>
+				<a class="bbs-feed-left-item<?php echo $_forum['fid'] == $fid ? ' active' : '';?>" href="<?php echo url("forum-$_forum[fid]");?>">
+					<span class="bbs-feed-left-icon"><img src="<?php echo $_forum['icon_url'];?>"></span>
+					<strong><?php echo $_forum['name'];?></strong>
+				</a>
+				<?php }} ?>
+			</div>
+		</aside>
+
+		<section class="bbs-feed-main bbs-forum-main">
+			<!--{hook forum_breadcrumb_before.htm}-->
+			<?php if(empty($hide_breadcrumb)) { ?>
+			<ol class="breadcrumb d-none d-md-flex bbs-forum-breadcrumb">
+				<li class="breadcrumb-item"><a href="./"><i class="icon-home" aria-hidden="true"></i></a></li>
+				<li class="breadcrumb-item active"><a href="<?php echo url("forum-$fid");?>"><?php echo $forum['name'];?></a></li>
+				<!--{hook forum_breadcrumb.htm}-->
+			</ol>
+			<?php } ?>
+			<!--{hook forum_breadcrumb_after.htm}-->
+
+			<div class="bbs-feed-tabs bbs-forum-tabs">
+				<a class="<?php echo $orderby == 'lastpid' ? 'active' : '';?>" href="<?php echo url("forum-$fid-1", array('orderby'=>'lastpid') + $extra);?>"><?php echo lang('post_create_date');?></a>
+				<a class="<?php echo $orderby == 'tid' ? 'active' : '';?>" href="<?php echo url("forum-$fid-1", array('orderby'=>'tid') + $extra);?>"><?php echo lang('thread_create_date');?></a>
+				<!--{hook forum_thread_list_nav_item_after.htm}-->
+			</div>
+
+			<div class="threadlist bbs-forum-threadlist">
+				<!--{hook forum_threadlist_before.htm}-->
+				<?php if($threadlist) { foreach($threadlist as &$_thread) { ?>
+				<div class="bbs-feed-card bbs-forum-thread-card thread" data-href="<?php echo url("thread-$_thread[tid]");?>" data-tid="<?php echo $_thread['tid'];?>">
+					<?php if(!empty($_thread['allowtop'])) { ?><input type="checkbox" name="modtid" class="bbs-feed-check" value="<?php echo $_thread['tid'];?>" /><?php } ?>
+					<?php if($_thread['top'] > 0) { ?><div class="bbs-feed-ribbon">TOP</div><?php } ?>
+					<div class="bbs-forum-thread-head">
+						<a class="bbs-feed-meta-author" href="<?php echo url("user-$_thread[uid]");?>"><img src="<?php echo $_thread['user_avatar_url'];?>"><?php echo $_thread['username'];?></a>
+						<span><i class="icon-clock-o"></i><?php echo $_thread['create_date_fmt'];?></span>
+					</div>
+					<div class="bbs-feed-card-body">
+						<h2><a href="<?php echo url("thread-$_thread[tid]");?>"><?php echo $_thread['subject'];?></a></h2>
+						<?php if(!empty($_thread['brief'])) { ?><p><?php echo $_thread['brief'];?></p><?php } ?>
+					</div>
+					<div class="bbs-feed-card-foot">
+						<span><i class="icon-comment-o"></i><?php echo intval($_thread['posts']);?></span>
+						<span><i class="icon-eye"></i><?php echo intval($_thread['views']);?></span>
+						<?php if(!empty($_thread['last_date_fmt'])) { ?><span><i class="icon-refresh"></i><?php echo $_thread['last_date_fmt'];?></span><?php } ?>
+						<?php if(!empty($_thread['taglist'])) { foreach($_thread['taglist'] as $_tag) { ?>
+						<span class="bbs-feed-tag bbs-feed-custom-tag"><?php echo $_tag;?></span>
+						<?php }} ?>
+						<?php if($_thread['top'] > 0) { ?><span class="bbs-feed-tag">置顶</span><?php } ?>
+					</div>
+				</div>
+				<?php }} else { ?>
+				<div class="bbs-feed-empty bbs-forum-empty">
+					<i class="icon-comment-o"></i>
+					<strong><?php echo lang('none');?></strong>
+					<span>当前版块还没有主题，欢迎发布第一篇内容。</span>
+					<a class="btn btn-primary btn-sm" href="<?php echo url('thread-create-'.$fid);?>"><?php echo lang('thread_create_new');?></a>
+				</div>
+				<?php } ?>
+				<!--{hook forum_threadlist_after.htm}-->
+			</div>
+
+			<?php include _include(APP_PATH.'view/htm/thread_list_mod.inc.htm');?>
+			
+			<!--{hook forum_page_before.htm}-->
+			<nav class="bbs-feed-pagination"><ul class="pagination justify-content-center flex-wrap"><?php echo $pagination; ?></ul></nav>
+			<!--{hook forum_page_after.htm}-->
+		</section>
+
+		<aside class="bbs-feed-right bbs-forum-right bbs-side-modern">
+			<div class="bbs-feed-side-card bbs-forum-profile-card">
+				<div class="bbs-forum-profile-head">
+					<div class="bbs-forum-profile-icon"><img src="<?php echo $forum['icon_url'];?>"></div>
+					<div>
+						<div class="bbs-forum-profile-kicker"><i class="icon-home"></i><?php echo lang('index_page');?> / 当前版块</div>
+						<h3><?php echo $forum['name'];?></h3>
+					</div>
+				</div>
+				<div class="bbs-forum-profile-brief"><?php echo $forum['brief'] ? $forum['brief'] : '这里还没有版块简介，欢迎大家参与讨论。';?></div>
+				<a class="btn btn-primary btn-block bbs-forum-profile-action" href="<?php echo url('thread-create-'.$fid);?>"><i class="icon-edit"></i><?php echo lang('thread_create_new');?></a>
+			</div>
+
+			<div class="bbs-feed-side-card bbs-forum-stat-card">
+				<div class="bbs-feed-side-title"><i class="icon-bar-chart"></i>版块数据</div>
+				<div class="bbs-forum-stat-grid">
+					<div><span><?php echo lang('threads');?></span><strong><?php echo intval($forum['threads']);?></strong></div>
+					<div><span><?php echo lang('today_posts');?></span><strong><?php echo intval($forum['todayposts']);?></strong></div>
+					<div><span><?php echo lang('today_threads');?></span><strong><?php echo intval($forum['todaythreads']);?></strong></div>
+				</div>
+			</div>
+
+			<?php if($forum['announcement'] || $forum['modlist']) { ?>
+			<div class="bbs-feed-side-card bbs-forum-info-card">
+				<?php if($forum['announcement']) { ?>
+				<div class="bbs-feed-side-title"><i class="icon-bullhorn"></i><?php echo lang('forum_anouncement');?></div>
+				<div class="bbs-forum-announcement"><?php echo $forum['announcement'];?></div>
+				<?php } ?>
+				<?php if($forum['modlist']) { ?>
+				<div class="bbs-feed-side-title bbs-forum-mod-title"><i class="icon-user"></i><?php echo lang('forum_moderator');?></div>
+				<div class="bbs-forum-mod-list">
+					<?php foreach ($forum['modlist'] as $mod) { ?>
+					<a href="<?php echo url("user-$mod[uid]");?>"><img src="<?php echo $conf['view_url'];?>img/avatar.png"><span><?php echo $mod['username'];?></span></a>
+					<?php } ?>
+				</div>
+				<?php } ?>
+			</div>
+			<?php } ?>
+
+			<div class="bbs-side-card bbs-side-hot-card">
+				<div class="bbs-side-card-head">
+					<strong><i class="icon-fire"></i>版块热门</strong>
+				</div>
+				<ul class="bbs-side-hot-list">
+					<?php if($forum_hot_threadlist) { $i = 1; foreach($forum_hot_threadlist as $_hot) { ?>
+					<li class="rank-<?php echo $i;?>">
+						<em><?php echo $i++;?></em>
+						<a href="<?php echo url("thread-$_hot[tid]");?>"><?php echo $_hot['subject'];?></a>
+						<span><i class="icon-eye"></i><?php echo intval($_hot['views']);?></span>
+					</li>
+					<?php }} else { ?>
+					<li class="bbs-side-empty">暂无热门主题</li>
+					<?php } ?>
+				</ul>
+			</div>
+
+			<?php if(!empty($side_taglist)) { ?>
+			<div class="bbs-side-card bbs-side-tag-card">
+				<div class="bbs-side-card-head"><strong><i class="icon-tags"></i>标签</strong></div>
+				<div class="bbs-side-tag-list">
+					<?php foreach($side_taglist as $_tag=>$_count) { ?>
+					<span><?php echo $_tag;?><em><?php echo intval($_count);?></em></span>
+					<?php } ?>
+				</div>
+			</div>
+			<?php } ?>
+		</aside>
+	</div>
+</div>
+
+<!--{hook forum_end.htm}-->
+
+<?php include _include(APP_PATH.'view/htm/footer.inc.htm');?>
+
+<script>
+$('li[data-active="fid-<?php echo $fid;?>"]').addClass('active');
+</script>
+
+<!--{hook forum_js.htm}-->

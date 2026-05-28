@@ -1,0 +1,68 @@
+<?php $conf = G('conf');?>
+<?php $header = G('header');?>
+<?php $user = G('user');?>
+<?php $uid = G('uid');?>
+<?php $gid = G('gid');?>
+<?php $fid = G('fid');?>
+<?php $tid = G('tid');?>
+<?php $pid = G('pid');?>
+<?php $route = G('route');?>
+<?php $forumlist_show = G('forumlist_show');?>
+<?php $static_version = $conf['static_version'];?>
+
+<!DOCTYPE html>
+<html lang="<?php echo $conf['lang'];?>">
+<head>
+	
+	<?php echo defined('BASE_HREF') ? '<base href="'.BASE_HREF.'" />' : '' ;?>
+	
+	
+	
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	
+	<?php if(!empty($header['keywords'])) { ?>
+	<meta name="keywords" content="<?php echo strip_tags($header['keywords']);?>" />
+	<?php } ?>
+
+	<meta name="description" content="<?php echo strip_tags($header['description']);?>" />
+	<meta name="renderer" content="webkit">
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1" >
+
+	<title><?php echo $header['title'];?></title>
+	
+	
+	
+	<link rel="shortcut icon" href="<?php echo $conf['view_url'];?>img/favicon.ico" />
+	<link rel="icon" sizes="32x32" href="<?php echo $conf['view_url'];?>img/favicon.ico">
+	<link rel="Bookmark" href="<?php echo $conf['view_url'];?>img/favicon.ico" />
+	
+	
+	<?php $bootstrap_css = !empty($bootstrap_css) ? $bootstrap_css : $conf['view_url']."css/bootstrap.css".$static_version; ?>
+	<link rel="stylesheet" href="<?php echo $bootstrap_css;?>">
+	
+	
+	
+	<?php $bootstrap_bbs_version = '?v='.filemtime(APP_PATH.'view/css/bootstrap-bbs.css'); ?>
+	<?php $bootstrap_bbs_css = !empty($bootstrap_bbs_css) ? $bootstrap_bbs_css : $conf['view_url']."css/bootstrap-bbs.css".$bootstrap_bbs_version; ?>
+	<link rel="stylesheet" href="<?php echo $bootstrap_bbs_css;?>">
+	
+	
+	
+	
+</head>
+
+<body>
+	
+	
+	
+	<?php include _include(APP_PATH.'view/htm/header_nav.inc.htm');?>
+
+	<main id="body">
+		<?php $body_container_class = 'container'; ?>
+		<?php $route == 'index' AND $body_container_class .= ' bbs-feed-container'; ?>
+		<?php $route == 'forum' AND $body_container_class .= ' bbs-feed-container bbs-forum-container'; ?>
+		<?php $route == 'thread' AND $body_container_class .= ' bbs-thread-container'; ?>
+		<div class="<?php echo $body_container_class;?>">
+	
+		

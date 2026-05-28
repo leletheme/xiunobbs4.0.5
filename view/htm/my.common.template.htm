@@ -1,0 +1,70 @@
+<?php include _include(APP_PATH.'view/htm/header.inc.htm');?>
+
+<!--{hook my_common_start.htm}-->
+
+<div class="btn-group mb-3 d-lg-none" role="group" id="my_mobile_nav">
+
+	<!--{hook my_common_mobile_my_before.htm}-->
+	<a role="button" class="btn btn-secondary" data-active="menu-my" href="<?php echo url('my');?>">个人资料</a>
+	<!--{hook my_common_mobile_my_after.htm}-->
+	
+	<!--{hook my_common_mobile_my_thread_before.htm}-->
+	<a role="button" class="btn btn-secondary" data-active="menu-my-thread" href="<?php echo url('my-thread');?>">论坛帖子</a>
+	<!--{hook my_common_mobile_my_thread_after.htm}-->
+	
+</div>
+
+<div class="row">
+	<!-- 左侧菜单 -->
+	<div class="col-lg-3 hidden-md hidden-sm" id="my_aside">
+		<div class="card bbs-profile-side-card">
+			<div class="bbs-profile-cover"></div>
+			<div class="card-body text-center bbs-profile-side-body">
+				<!--{hook my_common_avatar_before.htm}-->
+				<img class="bbs-profile-avatar" src="<?php echo $user['avatar_url'];?>">
+				<h5><?php echo $user['username'];?></h5>
+				<div class="bbs-profile-level"><i class="icon-star"></i><?php echo $user['groupname'];?></div>
+				<div class="bbs-profile-stats">
+					<div><span>主题</span><strong><?php echo intval($user['threads']);?></strong></div>
+					<div><span>回帖</span><strong><?php echo intval($user['posts']);?></strong></div>
+					<div><span>积分</span><strong><?php echo intval($user['credits']);?></strong></div>
+					<div><span>金币</span><strong><?php echo intval($user['golds']);?></strong></div>
+				</div>
+				<div class="bbs-profile-posts">
+					<?php if(!empty($profile_threadlist)) { foreach($profile_threadlist as $_thread) { ?>
+					<a href="<?php echo url("thread-$_thread[tid]");?>"><span><?php echo $_thread['subject'];?></span><em><?php echo $_thread['create_date_fmt'];?></em></a>
+					<?php }} else { ?>
+					<div class="bbs-profile-posts-empty">暂无主题内容</div>
+					<?php } ?>
+				</div>
+				<div class="bbs-profile-more"><a href="<?php echo url('my-thread');?>">更多作者好帖 →</a></div>
+				<!--{hook my_common_username_after.htm}-->
+			</div>
+		</div>
+	</div>
+	<!-- 右侧内容 -->
+	<div class="col-lg-9" id="my_main">
+		<!--{hook my_common_main_card_before.htm}-->
+		<div class="card">
+			<div class="card-header">
+				<!--{hook my_common_my_nav_slot_before.htm}-->
+				<slot name="my_nav" />
+				<!--{hook my_common_my_nav_slot_after.htm}-->
+			</div>
+			<div class="card-body">
+				<!--{hook my_common_my_body_slot_before.htm}-->
+				<slot name="my_body" />
+				<!--{hook my_common_my_body_slot_after.htm}-->
+			</div>
+		</div>
+		<!--{hook my_common_main_card_after.htm}-->
+	</div>
+</div>
+
+<!--{hook my_common_end.htm}-->
+
+<?php include _include(APP_PATH.'view/htm/footer.inc.htm');?>
+<script>
+$('li[data-active="bbs"]').addClass('active');
+</script>
+<!--{hook my_common_js.htm}-->

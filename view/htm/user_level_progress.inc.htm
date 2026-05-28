@@ -1,0 +1,24 @@
+<div class="bbs-level-progress-card">
+	<div class="bbs-level-progress-head">
+		<div>
+			<span>当前等级</span>
+			<strong><?php echo $credit_progress['current_name'];?></strong>
+		</div>
+		<div class="text-right">
+			<span><?php echo $credit_progress['is_max'] ? '最高等级' : '下一等级';?></span>
+			<strong><?php echo $credit_progress['next_name'];?></strong>
+		</div>
+	</div>
+	<div class="bbs-level-progress-bar">
+		<i style="width: <?php echo intval($credit_progress['percent']);?>%"></i>
+	</div>
+	<div class="bbs-level-progress-meta">
+		<span>当前积分 <?php echo intval($credit_progress['credits']);?></span>
+		<?php if($credit_progress['is_max']) { ?>
+		<span>已达到最高等级</span>
+		<?php } else { ?>
+		<span>还差 <?php echo intval($credit_progress['need']);?> 积分升级</span>
+		<?php } ?>
+		<span><?php echo intval($credit_progress['percent']);?>%</span>
+	</div>
+</div>

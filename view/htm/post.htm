@@ -1,0 +1,302 @@
+<?php include _include(APP_PATH.'view/htm/header.inc.htm');?>
+
+<?php
+	// 公用一个模板
+	if($route == 'thread' && $action == 'create') {
+		$form_title = lang('thread_create');
+		$form_action = url("thread-create");
+		$form_submit_txt = lang('thread_create');
+		$form_subject = '';
+		$form_brief = '';
+		$form_tags = '';
+		$form_message = '';
+		$form_doctype = 2;
+		$form_recommend = 0;
+		$isfirst = 1;
+		$quotepid = 0;
+		$location = url("forum-'+jfid.checked()+'");
+		$filelist = array();
+	} elseif($route == 'post' && $action == 'update') {
+		$form_title = lang('post_update');
+		$form_action = url("post-update-$pid");
+		$form_submit_txt = lang('post_update');
+		$form_subject = $thread['subject'];
+		$form_brief = array_value($thread, 'brief', '');
+		$form_tags = array_value($thread, 'tags', '');
+		$form_message = $post['message'];
+		$form_doctype = $post['doctype'] ? $post['doctype'] : 2;
+		$form_recommend = intval(array_value($thread, 'recommend', 0));
+		$isfirst = $post['isfirst'];
+		$quotepid = $post['quotepid'];
+		$location = url("thread-$tid");
+	} elseif($route == 'post' && $action == 'create') {
+		$form_title = lang('post_create');
+		$form_action = url("post-create-$tid-0");
+		$form_submit_txt = lang('post_create');
+		$form_subject = '';
+		$form_brief = '';
+		$form_tags = '';
+		$form_message = '';
+		$form_doctype = 2;
+		$form_recommend = 0;
+		$isfirst = 0;
+		//$quotepid = 0;
+		$location = url("thread-$tid");
+		$filelist = array();
+	}
+	
+	// hook post_start_init.htm
+	
+	$filelist += (array)_SESSION('tmp_files');
+?>
+
+<!--{hook post_start.htm}-->
+
+<div class="row">
+	<div class="col-lg-10 mx-auto">
+		<div class="card">
+			<div class="card-header">
+				<?php echo $form_title; ?>
+			</div>
+			<div class="card-body">
+				<form action="<?php echo $form_action;?>" method="post" id="form">
+					<input type="hidden" name="doctype" value="<?php echo $form_doctype;?>" />
+					<input type="hidden" name="quotepid" value="<?php echo $quotepid;?>" />
+					
+					<!--{hook post_fid_before.htm}-->
+					<?php if($isfirst) { ?>
+					<div class="form-group">
+						<!--{hook post_fid_select_before.htm}-->
+						<select class="custom-select mr-1 w-auto" name="fid">
+							<?php foreach ($forumlist_allowthread as $forum) { ?>
+							<option value="<?php echo $forum['fid']; ?>"><?php echo $forum['name']; ?></option>
+							<?php } ?>
+						</select>
+						<!--{hook post_fid_select_after.htm}-->
+					</div>
+					<!--{hook post_subject_before.htm}-->
+					<div class="form-group">
+						<input type="text" class="form-control" placeholder="<?php echo lang('subject');?>" name="subject" value="<?php echo $form_subject;?>" id="subject">
+					</div>
+					<?php if(thread_brief_supported()) { ?>
+					<div class="form-group">
+						<textarea class="form-control bbs-post-brief" placeholder="帖子摘要，将显示在首页列表中；留空则自动截取正文" name="brief" id="brief" maxlength="240"><?php echo $form_brief;?></textarea>
+					</div>
+					<?php } ?>
+					<?php if(thread_recommend_supported() && forum_access_mod($fid, $gid, 'allowtop')) { ?>
+					<div class="form-group bbs-recommend-setting">
+						<label><input type="checkbox" name="recommend" value="1"<?php echo $form_recommend ? ' checked' : '';?>> 首页首屏推荐</label>
+						<div class="small text-muted">勾选后该主题会显示在首页顶部推荐卡片中。</div>
+					</div>
+					<?php } ?>
+					<div class="form-group bbs-post-tags-group">
+						<input type="text" class="form-control" placeholder="标签，多个用逗号或空格分隔，例如：经验 分享 教程" name="tags" value="<?php echo $form_tags;?>" id="tags">
+						<small class="form-text text-muted">最多 5 个标签，每个标签最多 16 个字符。</small>
+					</div>
+					<!--{hook post_subject_after.htm}-->
+					<?php } ?>
+					
+					<div class="bbs-md-editor" id="bbs_md_editor">
+						<div class="bbs-md-toolbar">
+							<button type="button" data-md="heading">标题</button>
+							<button type="button" data-md="bold">加粗</button>
+							<button type="button" data-md="italic">斜体</button>
+							<button type="button" data-md="quote">引用</button>
+							<button type="button" data-md="ul">列表</button>
+							<button type="button" data-md="ol">编号</button>
+							<button type="button" data-md="code">代码</button>
+							<button type="button" data-md="link">链接</button>
+							<button type="button" data-md="image">图片</button>
+							<button type="button" data-md="hr">分割线</button>
+							<button type="button" data-md="preview">预览</button>
+						</div>
+						<div class="bbs-md-workspace">
+							<textarea class="form-control bbs-md-textarea" placeholder="<?php echo lang('message');?>" name="message" id="message"><?php echo $form_message;?></textarea>
+							<div class="bbs-md-preview markdown-body" id="bbs_md_preview"></div>
+						</div>
+						<div class="bbs-md-tips">支持 Markdown：标题、加粗、引用、列表、代码、链接和图片。</div>
+					</div>
+					
+					<!--{hook post_message_after.htm}-->
+
+					<div class="d-flex justify-content-between">
+						<div class="attachlist_parent">
+							<a class="small text-left" href="javascript:void(0)">
+								<label class="addattach" id="addattach">
+									<i class="icon-folder-open-o"></i> 
+									<?php echo lang('add_attach');?>
+									<input type="file"  multiple="multiple" class="invisible" />
+								</label>
+							</a>
+							<?php echo post_file_list_html($filelist, TRUE);?>
+							<!--{hook post_bottom_right.htm}-->
+						</div>
+						<div class="text-right">
+							<button type="submit" class="btn btn-primary" id="submit" data-loading-text="<?php echo lang('submiting');?>..."> <?php echo $form_submit_txt;?> </button>
+							<!--{hook post_bottom_left.htm}-->
+						</div>
+					</div>
+					
+					<!--{hook post_submit_after.htm}-->
+					
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!--{hook post_end.htm}-->
+
+<?php include _include(APP_PATH.'view/htm/footer.inc.htm');?>
+<script>
+var jform = $('#form');
+var jsubmit = $('#submit');
+var jfid = jform.find('select[name="fid"]');
+jform.on('submit', function() {
+	jform.reset();
+	jsubmit.button('loading');
+	var postdata = jform.serialize();
+	$.xpost(jform.attr('action'), postdata, function(code, message) {
+		if(code == 0) {
+			$.alert(message);
+			jsubmit.button(message).delay(1000).location('<?php echo $location;?>');
+		} else if(xn.is_number(code)) {
+			alert(message);
+			jsubmit.button('reset');
+		} else {
+			$.alert(message);
+			//jform.find('[name="'+code+'"]').alert(message).focus();
+			jsubmit.button('reset');
+		}
+	});
+	return false;
+});
+
+var jattachparent = $('.attachlist_parent');
+$('#addattach').on('change', function(e) {
+	var files = xn.get_files_from_event(e);
+	if (!files) return;
+	
+	// 并发下会 服务端 session 写入会有问题，由客户端控制改为串行
+	if (!jattachparent.find('.attachlist').length) {
+		jattachparent.append('<fieldset class="fieldset"><legend><?php echo lang('uploaded_attach');?></legend><ul class="attachlist"><ul></fieldset>');
+	}
+	
+	var jprogress = jattachparent.find('.progress');
+	if(!jprogress.length) {
+		jprogress = $('<div class="progress"><div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div></div>').appendTo(jattachparent);
+	}
+	jprogressbar = jprogress.find('.progress-bar');
+
+	$.each_sync(files, function(i, callback) {
+		var file = files[i];
+		xn.upload_file(file, xn.url('attach-create'), {is_image: 0}, function(code, message) {
+			if (code != 0) return $.alert(message);
+			// 把文件 append 到附件列表
+			var url = message.url;
+			var filetype = message.filetype;
+			var aid = message.aid;
+			$('.attachlist').append('<li aid="' + aid + '"><a href="' + message.url + '" target="_blank"><i class="icon filetype ' + filetype + '"></i> ' + message.orgfilename + '</a> <a href="javascript:void(0);" class="delete ml-2"><i class="icon-remove"></i> <?php echo lang('delete');?></a></li>');
+			callback();
+			jprogress.hide();
+		}, function(percent) {
+			percent = xn.intval(percent);
+			jprogressbar.css('width', percent+'%');
+			jprogressbar.text(percent+'%');
+			jprogress.show();
+			console.log('progress:'+ percent); 
+		});
+	});
+});
+
+// 删除附件
+jattachparent.on('click', 'a.delete', function() {
+	var jlink = $(this);
+	var jli = jlink.parents('li');
+	var aid = jli.attr('aid');
+	if(!window.confirm(lang.confirm_delete)) return false;
+	$.xpost(xn.url('attach-delete-'+aid), function(code, message) {
+		if(code != 0) return $.alert(message);
+		jlink.parent().remove();
+	});
+	return false;
+})
+
+var jmdeditor = $('#bbs_md_editor');
+var jmessage = $('#message');
+var jpreview = $('#bbs_md_preview');
+
+function bbs_md_escape(s) {
+	return $('<div>').text(s).html();
+}
+
+function bbs_md_render(s) {
+	s = bbs_md_escape(s || '');
+	s = s.replace(/^######\s*(.+)$/gm, '<h6>$1</h6>');
+	s = s.replace(/^#####\s*(.+)$/gm, '<h5>$1</h5>');
+	s = s.replace(/^####\s*(.+)$/gm, '<h4>$1</h4>');
+	s = s.replace(/^###\s*(.+)$/gm, '<h3>$1</h3>');
+	s = s.replace(/^##\s*(.+)$/gm, '<h2>$1</h2>');
+	s = s.replace(/^#\s*(.+)$/gm, '<h1>$1</h1>');
+	s = s.replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>');
+	s = s.replace(/`([^`]+)`/g, '<code>$1</code>');
+	s = s.replace(/\*\*([^\*]+)\*\*/g, '<strong>$1</strong>');
+	s = s.replace(/\*([^\*]+)\*/g, '<em>$1</em>');
+	s = s.replace(/^&gt;\s*(.+)$/gm, '<blockquote>$1</blockquote>');
+	s = s.replace(/!\[([^\]]*)\]\(([^\)]+)\)/g, '<img src="$2" alt="$1">');
+	s = s.replace(/\[([^\]]+)\]\(([^\)]+)\)/g, '<a href="$2" target="_blank">$1</a>');
+	s = s.replace(/^---$/gm, '<hr>');
+	s = s.replace(/\n/g, '<br>');
+	return s;
+}
+
+function bbs_md_update_preview() {
+	jpreview.html(bbs_md_render(jmessage.val()));
+}
+
+function bbs_md_insert(before, after, placeholder) {
+	var el = jmessage.get(0);
+	var val = jmessage.val();
+	var start = el.selectionStart || 0;
+	var end = el.selectionEnd || 0;
+	var selected = val.substring(start, end) || placeholder || '';
+	var text = before + selected + (after || '');
+	jmessage.val(val.substring(0, start) + text + val.substring(end));
+	el.focus();
+	el.selectionStart = start + before.length;
+	el.selectionEnd = start + before.length + selected.length;
+	bbs_md_update_preview();
+}
+
+$('.bbs-md-toolbar button').on('click', function() {
+	var type = $(this).data('md');
+	if(type == 'preview') {
+		jmdeditor.toggleClass('preview-on');
+		$(this).toggleClass('active');
+		bbs_md_update_preview();
+		return false;
+	}
+	if(type == 'heading') bbs_md_insert('# ', '', '标题');
+	if(type == 'bold') bbs_md_insert('**', '**', '加粗文字');
+	if(type == 'italic') bbs_md_insert('*', '*', '斜体文字');
+	if(type == 'quote') bbs_md_insert('> ', '', '引用内容');
+	if(type == 'ul') bbs_md_insert('- ', '', '列表项');
+	if(type == 'ol') bbs_md_insert('1. ', '', '列表项');
+	if(type == 'code') bbs_md_insert('`', '`', '代码');
+	if(type == 'link') bbs_md_insert('[', '](https://)', '链接文字');
+	if(type == 'image') bbs_md_insert('![', '](https://)', '图片描述');
+	if(type == 'hr') bbs_md_insert('\n---\n', '', '');
+	return false;
+});
+
+jmessage.on('input', bbs_md_update_preview);
+bbs_md_update_preview();
+
+jform.find('[name="fid"]').checked(<?php echo $fid;?>);
+
+$('li[data-active="bbs"]').addClass('active');
+$('li[data-active="fid-<?php echo $fid;?>"]').addClass('active');
+
+</script>
+
+<!--{hook post_js.htm}-->

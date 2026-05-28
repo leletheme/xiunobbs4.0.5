@@ -1,0 +1,90 @@
+<?php include _include(ADMIN_PATH.'view/htm/header.inc.htm');?>
+
+<div class="row">
+	<div class="col-12">
+		<div class="btn-group mb-3" role="group">
+			<?php echo admin_tab_active($menu['setting']['tab'], 'checkin_log');?>
+		</div>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-12">
+		<div class="card mb-3">
+			<div class="card-body">
+				<h4 class="card-title">筛选签到记录</h4>
+				<form action="<?php echo url('setting-checkin_log');?>" method="get" id="filter_form">
+					<div class="row">
+						<div class="col-md-2 mb-2">
+							<label>用户 ID：</label>
+							<input type="text" class="form-control" name="uid" value="<?php echo $uid_filter ? $uid_filter : '';?>" placeholder="UID">
+						</div>
+						<div class="col-md-2 mb-2">
+							<label>指定日期：</label>
+							<input type="date" class="form-control" name="ymd" value="<?php echo htmlspecialchars($ymd);?>">
+						</div>
+						<div class="col-md-2 mb-2">
+							<label>指定月份：</label>
+							<input type="month" class="form-control" name="month" value="<?php echo htmlspecialchars($month);?>">
+						</div>
+						<div class="col-md-2 mb-2">
+							<label>开始日期：</label>
+							<input type="date" class="form-control" name="date_start" value="<?php echo htmlspecialchars($date_start);?>">
+						</div>
+						<div class="col-md-2 mb-2">
+							<label>结束日期：</label>
+							<input type="date" class="form-control" name="date_end" value="<?php echo htmlspecialchars($date_end);?>">
+						</div>
+						<div class="col-md-2 mb-2 d-flex align-items-end">
+							<button type="submit" class="btn btn-primary mr-2"><i class="icon-search"></i> 搜索</button>
+							<a class="btn btn-secondary" href="<?php echo url('setting-checkin_log');?>">重置</a>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+		<div class="card">
+			<div class="card-header d-flex justify-content-between align-items-center">
+				<div><i class="icon-calendar"></i> 签到记录</div>
+				<div class="text-muted small">共 <?php echo intval($total);?> 条</div>
+			</div>
+			<div class="card-body">
+				<div class="table-responsive">
+					<table class="table table-hover" style="min-width: 900px">
+						<thead>
+							<tr>
+								<th width="90">用户 ID</th>
+								<th width="140">用户</th>
+								<th width="110">签到日期</th>
+								<th width="100">连续天数</th>
+								<th width="130">奖励</th>
+								<th width="160">签到时间</th>
+							</tr>
+						</thead>
+						<tbody>
+						<?php if($checkin_list) { foreach($checkin_list as $_record) { $_user = array_value($userlist, $_record['uid'], array()); ?>
+							<tr>
+								<td><?php echo intval($_record['uid']);?></td>
+								<td><?php echo $_user ? $_user['username'] : '-';?></td>
+								<td><?php echo intval($_record['ymd']);?></td>
+								<td><?php echo intval($_record['streak']);?> 天</td>
+								<td><?php echo checkin_record_reward_text($_record);?></td>
+								<td><?php echo date('Y-m-d H:i:s', $_record['create_date']);?></td>
+							</tr>
+						<?php }} else { ?>
+							<tr><td colspan="6" class="text-center text-muted py-4">暂无签到记录</td></tr>
+						<?php } ?>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		<nav><ul class="pagination justify-content-center mt-3"><?php echo $pagination; ?></ul></nav>
+	</div>
+</div>
+
+<?php include _include(ADMIN_PATH.'view/htm/footer.inc.htm');?>
+
+<script>
+$('#nav li.nav-item-setting').addClass('active');
+</script>
