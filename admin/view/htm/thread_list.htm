@@ -66,6 +66,26 @@
 							</select>
 						</div>
 						<?php } ?>
+						<?php if(thread_digest_supported()) { ?>
+						<div class="col-md-2 mb-2">
+							<label>精选：</label>
+							<select class="form-control" name="digest" id="digest">
+								<option value="-1"<?php echo $digest < 0 ? ' selected' : ''; ?>>全部</option>
+								<option value="1"<?php echo $digest == 1 ? ' selected' : ''; ?>>已精选</option>
+								<option value="0"<?php echo $digest == 0 ? ' selected' : ''; ?>>未精选</option>
+							</select>
+						</div>
+						<?php } ?>
+						<?php if(thread_mod_recommend_supported()) { ?>
+						<div class="col-md-2 mb-2">
+							<label>版主推荐：</label>
+							<select class="form-control" name="mod_recommend" id="mod_recommend">
+								<option value="-1"<?php echo $mod_recommend < 0 ? ' selected' : ''; ?>>全部</option>
+								<option value="1"<?php echo $mod_recommend == 1 ? ' selected' : ''; ?>>已推荐</option>
+								<option value="0"<?php echo $mod_recommend == 0 ? ' selected' : ''; ?>>未推荐</option>
+							</select>
+						</div>
+						<?php } ?>
 						<div class="col-md-4 mb-2 d-flex align-items-end">
 							<button type="submit" class="btn btn-primary mr-2"><i class="icon-search"></i> <?php echo lang('search');?></button>
 							<a class="btn btn-secondary" href="<?php echo url('thread-list');?>">重置</a>
@@ -81,6 +101,14 @@
 				<div>
 					<button type="button" id="open" class="btn btn-sm btn-primary batch-op"><i class="icon-unlock"></i> <?php echo lang('open');?></button>
 					<button type="button" id="close" class="btn btn-sm btn-primary batch-op"><i class="icon-lock"></i> <?php echo lang('close');?></button>
+					<?php if(thread_digest_supported()) { ?>
+					<button type="button" id="digest" class="btn btn-sm btn-warning batch-op">设精选</button>
+					<button type="button" id="undigest" class="btn btn-sm btn-outline-warning batch-op">取消精选</button>
+					<?php } ?>
+					<?php if(thread_mod_recommend_supported()) { ?>
+					<button type="button" id="mod_recommend" class="btn btn-sm btn-success batch-op">版主推荐</button>
+					<button type="button" id="unmod_recommend" class="btn btn-sm btn-outline-success batch-op">取消版推</button>
+					<?php } ?>
 					<button type="button" id="delete" class="btn btn-sm btn-danger batch-op"><i class="icon-remove"></i> <?php echo lang('delete');?></button>
 					<!--{hook admin_thread_list_delete_after.htm}-->
 				</div>
@@ -109,6 +137,8 @@
 									<a href="../<?php echo url("thread-$_thread[tid]");?>" target="_blank"><?php echo $_thread['subject'];?></a>
 									<?php if($_thread['top'] > 0) { ?><span class="badge badge-primary ml-1">置顶 <?php echo $_thread['top'];?></span><?php } ?>
 									<?php if(thread_recommend_supported() && !empty($_thread['recommend'])) { ?><span class="badge badge-success ml-1">推荐</span><?php } ?>
+									<?php if(thread_digest_supported() && !empty($_thread['digest'])) { ?><span class="badge badge-warning ml-1">精选</span><?php } ?>
+									<?php if(thread_mod_recommend_supported() && !empty($_thread['mod_recommend'])) { ?><span class="badge badge-info ml-1">版主推荐</span><?php } ?>
 									<?php if($_thread['brief']) { ?><div class="small text-muted mt-1"><?php echo $_thread['brief'];?></div><?php } ?>
 								</td>
 								<td><?php echo $_thread['forumname'];?></td>
@@ -149,7 +179,16 @@ $('.batch-op').on('click', function() {
 	var op = $(this).attr('id');
 	var jchecked = jlist.find('input[name="tid"]:checked');
 	if(jchecked.length < 1) return alert('请选择需要操作的主题');
-	var tips = op == 'delete' ? '确定删除选中的主题？删除后不可恢复。' : (op == 'close' ? '确定关闭选中的主题？' : '确定打开选中的主题？');
+	var tipsMap = {
+		delete: '确定删除选中的主题？删除后不可恢复。',
+		close: '确定关闭选中的主题？',
+		open: '确定打开选中的主题？',
+		digest: '确定将选中主题设为精选？',
+		undigest: '确定取消选中主题的精选？',
+		mod_recommend: '确定将选中主题设为版主推荐？',
+		unmod_recommend: '确定取消选中主题的版主推荐？'
+	};
+	var tips = tipsMap[op] || '确定执行该操作？';
 	if(!window.confirm(tips)) return false;
 	var tids = [];
 	jchecked.each(function() {
