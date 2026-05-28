@@ -1024,8 +1024,8 @@ li.quote {
 
 .bbs-feed-check {
   position: absolute;
-  top: 18px;
   right: 18px;
+  bottom: 18px;
   z-index: 3;
   width: 16px;
   height: 16px;
@@ -1073,13 +1073,78 @@ li.quote {
   width: 46px;
   height: 46px;
   padding-top: 7px;
-  padding-left: 14px;
   color: #fff;
   font-size: 0.72rem;
   font-weight: 800;
   transform: rotate(45deg) translate(7px, -18px);
   text-align: center;
   background: #2d7cff;
+}
+
+.bbs-feed-corner {
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  right: 0;
+  width: 92px;
+  height: 92px;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.bbs-feed-corner span {
+  position: absolute;
+  top: 14px;
+  right: -33px;
+  display: block;
+  width: 118px;
+  padding: 6px 0;
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: 0.08em;
+  text-align: center;
+  transform: rotate(45deg);
+  box-shadow: 0 10px 22px rgba(29, 115, 255, 0.22);
+  animation: bbsRibbonFloat 2.8s ease-in-out infinite;
+}
+
+.bbs-feed-corner-top span {
+  background: linear-gradient(135deg, #1d73ff, #60a5fa);
+}
+
+.bbs-feed-corner-digest span {
+  background: linear-gradient(135deg, #f59e0b, #f97316);
+  box-shadow: 0 10px 22px rgba(245, 158, 11, 0.24);
+}
+
+.bbs-feed-corner-mod span {
+  background: linear-gradient(135deg, #10b981, #22c55e);
+  box-shadow: 0 10px 22px rgba(16, 185, 129, 0.24);
+}
+
+.bbs-feed-card-top {
+  border-color: rgba(29, 115, 255, 0.2);
+}
+
+.bbs-feed-card-digest {
+  border-color: rgba(245, 158, 11, 0.24);
+}
+
+.bbs-feed-card-mod {
+  border-color: rgba(16, 185, 129, 0.22);
+}
+
+@keyframes bbsRibbonFloat {
+  0%, 100% {
+    filter: brightness(1);
+    transform: rotate(45deg) translateY(0);
+  }
+  50% {
+    filter: brightness(1.08);
+    transform: rotate(45deg) translateY(-1px);
+  }
 }
 
 .bbs-feed-card-head {
@@ -1268,6 +1333,47 @@ li.quote {
 .bbs-feed-custom-tag {
   color: #1d73ff;
   background: #eef5ff;
+}
+
+.bbs-feed-tag-top {
+  color: #1d73ff;
+  background: #eef5ff;
+}
+
+.bbs-feed-tag-digest {
+  color: #b45309;
+  background: #fff7ed;
+}
+
+.bbs-feed-tag-mod {
+  color: #047857;
+  background: #ecfdf5;
+}
+
+.bbs-thread-badge {
+  display: inline-flex;
+  align-items: center;
+  height: 20px;
+  margin-right: 5px;
+  padding: 0 7px;
+  color: #fff;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 800;
+  line-height: 20px;
+  vertical-align: middle;
+}
+
+.bbs-thread-badge-top {
+  background: linear-gradient(135deg, #1d73ff, #60a5fa);
+}
+
+.bbs-thread-badge-digest {
+  background: linear-gradient(135deg, #f59e0b, #f97316);
+}
+
+.bbs-thread-badge-mod {
+  background: linear-gradient(135deg, #10b981, #22c55e);
 }
 
 .bbs-post-tags-group .form-text {
