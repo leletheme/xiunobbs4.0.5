@@ -11,7 +11,7 @@
 					?>
 
 					<?php if($threadlist) { foreach($threadlist as &$_thread) { ?>
-					<li class="media thread tap <?php echo $_thread['top_class'];?> " data-href="<?php echo url("thread-$_thread[tid]");?>" data-tid="<?php echo $_thread['tid'];?>">
+					<li class="media thread tap <?php echo $_thread['top_class'];?> <?php echo !empty($_thread['digest']) ? 'digest' : ''; ?> <?php echo !empty($_thread['mod_recommend']) ? 'mod-recommend' : ''; ?>" data-href="<?php echo url("thread-$_thread[tid]");?>" data-tid="<?php echo $_thread['tid'];?>">
 						<?php if($have_allowtop) { ?>
 							<?php if($_thread['allowtop']) { ?>
 							<input type="checkbox" name="modtid" class="mt-3 mr-2" value="<?php echo $_thread['tid']; ?>" />
@@ -30,7 +30,10 @@
 								<!--{hook thread_list_inc_top_icon_before.htm}-->
 								<?php if($_thread['top'] > 0) { ?>
 									<i class="icon-top-<?php echo $_thread['top']; ?>"></i>
+									<span class="bbs-thread-badge bbs-thread-badge-top">置顶</span>
 								<?php } ?>
+								<?php if(!empty($_thread['digest'])) { ?><span class="bbs-thread-badge bbs-thread-badge-digest">精选</span><?php } ?>
+								<?php if(!empty($_thread['mod_recommend'])) { ?><span class="bbs-thread-badge bbs-thread-badge-mod">版主推荐</span><?php } ?>
 								<!--{hook thread_list_inc_subject_top_after.htm}-->
 								
 								<!--{hook thread_list_inc_subject_before.htm}-->
