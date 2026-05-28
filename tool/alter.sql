@@ -1,6 +1,8 @@
 ALTER TABLE bbs_thread ADD COLUMN brief char(240) NOT NULL default '' after subject;
 ALTER TABLE bbs_thread ADD COLUMN recommend tinyint(1) unsigned NOT NULL default '0' after brief;
-ALTER TABLE bbs_thread ADD COLUMN tags char(120) NOT NULL default '' after recommend;
+ALTER TABLE bbs_thread ADD COLUMN digest tinyint(1) unsigned NOT NULL default '0' after recommend;
+ALTER TABLE bbs_thread ADD COLUMN mod_recommend tinyint(1) unsigned NOT NULL default '0' after digest;
+ALTER TABLE bbs_thread ADD COLUMN tags char(120) NOT NULL default '' after mod_recommend;
 
 ALTER TABLE bbs_thread CHANGE lastpost last_date int(11) unsigned NOT NULL default '0';
 
