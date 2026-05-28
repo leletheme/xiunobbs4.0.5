@@ -57,6 +57,8 @@ function thread_create($arr, &$pid) {
 	$brief = thread_brief_supported() ? array_value($arr, 'brief', '') : '';
 	$tags = thread_tags_supported() ? thread_tags_filter(array_value($arr, 'tags', '')) : '';
 	$recommend = thread_recommend_supported() ? intval(array_value($arr, 'recommend', 0)) : 0;
+	$digest = thread_digest_supported() ? intval(array_value($arr, 'digest', 0)) : 0;
+	$mod_recommend = thread_mod_recommend_supported() ? intval(array_value($arr, 'mod_recommend', 0)) : 0;
 	
 	# 论坛帖子数据，一页显示，不分页�?
 	$post = array(
@@ -92,6 +94,8 @@ function thread_create($arr, &$pid) {
 	if(thread_brief_supported()) $thread['brief'] = $brief;
 	if(thread_tags_supported()) $thread['tags'] = $tags;
 	if(thread_recommend_supported()) $thread['recommend'] = $recommend;
+	if(thread_digest_supported()) $thread['digest'] = $digest;
+	if(thread_mod_recommend_supported()) $thread['mod_recommend'] = $mod_recommend;
 	
 	// hook model_thread__create_before.php
 	
@@ -330,6 +334,30 @@ function thread_recommend_supported() {
 	return $supported;
 }
 
+function thread_digest_supported() {
+	static $supported = NULL;
+	if($supported !== NULL) return $supported;
+	$db = $_SERVER['db'];
+	$table = $db->tablepre.'thread';
+	$r = db_sql_find_one("SHOW COLUMNS FROM `$table` LIKE 'digest'");
+	$supported = empty($r) ? 0 : 1;
+	return $supported;
+}
+
+function thread_mod_recommend_supported() {
+	static $supported = NULL;
+	if($supported !== NULL) return $supported;
+	$db = $_SERVER['db'];
+	$table = $db->tablepre.'thread';
+	$r = db_sql_find_one("SHOW COLUMNS FROM `$table` LIKE 'mod_recommend'");
+	$supported = empty($r) ? 0 : 1;
+	return $supported;
+}
+
+function thread_feature_supported() {
+	return thread_digest_supported() && thread_mod_recommend_supported();
+}
+
 function thread_brief_supported() {
 	static $supported = NULL;
 	if($supported !== NULL) return $supported;
@@ -398,6 +426,8 @@ function thread_format(&$thread) {
 	$thread['forumname'] = $forum['name'];
 	$thread['brief'] = array_value($thread, 'brief', '');
 	$thread['recommend'] = intval(array_value($thread, 'recommend', 0));
+	$thread['digest'] = intval(array_value($thread, 'digest', 0));
+	$thread['mod_recommend'] = intval(array_value($thread, 'mod_recommend', 0));
 	$thread['tags'] = array_value($thread, 'tags', '');
 	$thread['taglist'] = thread_tags_to_array($thread['tags']);
 	
