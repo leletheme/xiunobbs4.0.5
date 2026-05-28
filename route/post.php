@@ -166,6 +166,8 @@ if($action == 'create') {
 		if($isfirst) {
 			$newfid = param('fid');
 			$recommend = thread_recommend_supported() && forum_access_mod($newfid, $gid, 'allowtop') ? param('recommend', 0) : 0;
+			$digest = thread_digest_supported() && forum_access_mod($newfid, $gid, 'allowtop') ? param('digest', 0) : 0;
+			$mod_recommend = thread_mod_recommend_supported() && forum_access_mod($newfid, $gid, 'allowtop') ? param('mod_recommend', 0) : 0;
 			$forum = forum_read($newfid);
 			empty($forum) AND message('fid', lang('forum_not_exists'));
 			
@@ -187,6 +189,12 @@ if($action == 'create') {
 			}
 			if(thread_recommend_supported() && $recommend != intval(array_value($thread, 'recommend', 0))) {
 				$arr['recommend'] = $recommend;
+			}
+			if(thread_digest_supported() && $digest != intval(array_value($thread, 'digest', 0))) {
+				$arr['digest'] = $digest;
+			}
+			if(thread_mod_recommend_supported() && $mod_recommend != intval(array_value($thread, 'mod_recommend', 0))) {
+				$arr['mod_recommend'] = $mod_recommend;
 			}
 			$arr AND thread_update($tid, $arr) === FALSE AND message(-1, lang('update_thread_failed'));
 		}
