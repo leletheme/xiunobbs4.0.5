@@ -1579,30 +1579,74 @@ li.quote {
 }
 
 .bbs-md-editor {
+  position: relative;
   overflow: hidden;
   border: 1px solid #d8dee8;
-  border-radius: 8px;
+  border-radius: 12px;
   background: #fff;
+}
+
+.bbs-md-editor.fullscreen-on {
+  position: fixed;
+  z-index: 2000;
+  top: 12px;
+  right: 12px;
+  bottom: 12px;
+  left: 12px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 24px 80px rgba(15, 23, 42, 0.32);
 }
 
 .bbs-md-toolbar {
   display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
+  flex-wrap: nowrap;
+  align-items: flex-start;
+  gap: 10px;
   padding: 10px;
   border-bottom: 1px solid #e7ebf2;
   background: #f8fafc;
 }
 
+.bbs-md-toolbar-secondary {
+  align-items: center;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  background: #fbfcfe;
+}
+
+.bbs-md-toolbar-main,
+.bbs-md-toolbar-actions {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  min-width: 0;
+}
+
+.bbs-md-toolbar-main {
+  flex: 1 1 auto;
+}
+
+.bbs-md-toolbar-actions {
+  flex: 0 0 auto;
+  justify-content: flex-end;
+}
+
 .bbs-md-toolbar button {
+  flex: 0 0 auto;
   height: 30px;
+  min-width: 36px;
   padding: 0 10px;
   color: #344052;
   border: 1px solid #dce2eb;
-  border-radius: 6px;
+  border-radius: 7px;
   background: #fff;
   cursor: pointer;
   font-size: 0.78rem;
+  font-weight: 800;
+  line-height: 28px;
+  white-space: nowrap;
+  transition: color 0.16s ease, border-color 0.16s ease, background 0.16s ease, box-shadow 0.16s ease;
 }
 
 .bbs-md-toolbar button:hover,
@@ -1610,20 +1654,71 @@ li.quote {
   color: #1d73ff;
   border-color: #b9d2ff;
   background: #eef5ff;
+  box-shadow: 0 6px 14px rgba(29, 115, 255, 0.08);
+}
+
+.bbs-md-counter {
+  margin-left: auto;
+  color: #8a96a6;
+  font-size: 0.78rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.bbs-md-emoji-panel {
+  display: none;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 10px;
+  border-bottom: 1px solid #e7ebf2;
+  background: #fff;
+}
+
+.bbs-md-emoji-panel.show {
+  display: flex;
+}
+
+.bbs-md-emoji-panel button {
+  width: 34px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid #dce2eb;
+  border-radius: 7px;
+  background: #fff;
+  cursor: pointer;
+  font-size: 1rem;
+  line-height: 30px;
+  text-align: center;
+}
+
+.bbs-md-emoji-panel button:hover {
+  border-color: #b9d2ff;
+  background: #eef5ff;
 }
 
 .bbs-md-workspace {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  min-height: 360px;
+  min-height: 420px;
+}
+
+.bbs-md-editor.fullscreen-on .bbs-md-workspace {
+  flex: 1 1 auto;
+  min-height: 0;
 }
 
 .bbs-md-textarea {
-  min-height: 360px;
+  min-height: 420px;
   border: 0;
   border-radius: 0;
   resize: vertical;
   line-height: 1.75;
+  font-size: 0.94rem;
+}
+
+.bbs-md-editor.fullscreen-on .bbs-md-textarea,
+.bbs-md-editor.fullscreen-on .bbs-md-preview {
+  min-height: 100%;
 }
 
 .bbs-md-textarea:focus {
@@ -1631,8 +1726,8 @@ li.quote {
 }
 
 .bbs-md-preview {
-  min-height: 360px;
-  padding: 16px;
+  min-height: 420px;
+  padding: 18px;
   overflow: auto;
   border-left: 1px solid #e7ebf2;
   background: #fbfcfe;
@@ -1650,7 +1745,7 @@ li.quote {
 
 .bbs-md-editor.preview-on .bbs-md-preview {
   display: block;
-  min-height: 460px;
+  min-height: 520px;
   border-left: 0;
 }
 
@@ -1660,6 +1755,41 @@ li.quote {
   border-top: 1px solid #e7ebf2;
   background: #fbfcfe;
   font-size: 0.78rem;
+}
+
+.bbs-md-editor.fullscreen-on .bbs-md-tips {
+  flex: 0 0 auto;
+}
+
+.bbs-md-task-list {
+  padding-left: 1.35rem;
+  list-style: none;
+}
+
+.bbs-md-task-list input {
+  margin-right: 0.4rem;
+}
+
+@media (max-width: 768px) {
+  .bbs-md-toolbar,
+  .bbs-md-toolbar-secondary {
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+
+  .bbs-md-toolbar-main,
+  .bbs-md-toolbar-actions,
+  .bbs-md-counter {
+    flex: 0 0 100%;
+    justify-content: flex-start;
+    margin-left: 0;
+  }
+
+  .bbs-md-toolbar button {
+    min-width: 34px;
+    padding-right: 8px;
+    padding-left: 8px;
+  }
 }
 
 .bbs-recommend-setting {
@@ -1691,6 +1821,29 @@ li.quote {
 
 .markdown-body p {
   margin-bottom: 0.8em;
+}
+
+.markdown-body ul,
+.markdown-body ol {
+  margin-bottom: 1em;
+  padding-left: 1.4rem;
+}
+
+.markdown-body table {
+  width: 100%;
+  margin-bottom: 1rem;
+  background: #fff;
+}
+
+.markdown-body th {
+  background: #f5f8fc;
+  font-weight: 900;
+}
+
+.markdown-body th,
+.markdown-body td {
+  padding: 0.48rem 0.62rem;
+  border: 1px solid #e2e8f0;
 }
 
 .markdown-body blockquote {
