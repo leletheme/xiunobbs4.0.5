@@ -347,6 +347,37 @@ body {
   margin-top: 0.45rem !important;
 }
 
+.bbs-thread-detail-label {
+  display: inline-flex;
+  align-items: center;
+  height: 22px;
+  margin-right: 7px;
+  padding: 0 8px;
+  color: #fff;
+  border-radius: 4px;
+  font-size: 0.76rem;
+  font-weight: 900;
+  line-height: 22px;
+  vertical-align: 2px;
+  white-space: nowrap;
+}
+
+.bbs-thread-detail-label-top {
+  background: linear-gradient(135deg, #1d73ff, #60a5fa);
+}
+
+.bbs-thread-detail-label-recommend {
+  background: linear-gradient(135deg, #ef4444, #f43f5e);
+}
+
+.bbs-thread-detail-label-digest {
+  background: linear-gradient(135deg, #f59e0b, #f97316);
+}
+
+.bbs-thread-detail-label-mod {
+  background: linear-gradient(135deg, #10b981, #22c55e);
+}
+
 .bbs-thread-neighbor-nav {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1095,15 +1126,15 @@ li.quote {
 .bbs-feed-corner span {
   position: absolute;
   top: 14px;
-  right: -33px;
+  right: -29px;
   display: block;
-  width: 118px;
+  width: 112px;
   padding: 6px 0;
   color: #fff;
   font-size: 0.78rem;
   font-weight: 900;
   line-height: 1;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.02em;
   text-align: center;
   transform: rotate(45deg);
   box-shadow: 0 10px 22px rgba(29, 115, 255, 0.22);
@@ -1111,6 +1142,11 @@ li.quote {
 
 .bbs-feed-corner-top span {
   background: linear-gradient(135deg, #1d73ff, #60a5fa);
+}
+
+.bbs-feed-corner-recommend span {
+  background: linear-gradient(135deg, #ef4444, #f43f5e);
+  box-shadow: 0 10px 22px rgba(239, 68, 68, 0.24);
 }
 
 .bbs-feed-corner-digest span {
@@ -1125,6 +1161,10 @@ li.quote {
 
 .bbs-feed-card-top {
   border-color: rgba(29, 115, 255, 0.2);
+}
+
+.bbs-feed-card-recommend {
+  border-color: rgba(239, 68, 68, 0.24);
 }
 
 .bbs-feed-card-digest {
@@ -1326,6 +1366,11 @@ li.quote {
 .bbs-feed-tag-top {
   color: #1d73ff;
   background: #eef5ff;
+}
+
+.bbs-feed-tag-recommend {
+  color: #ef4444;
+  background: #fef2f2;
 }
 
 .bbs-dz-label {
