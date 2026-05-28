@@ -407,6 +407,27 @@ function thread_tags_to_array($tags) {
 	return $result;
 }
 
+function thread_special_sort($threadlist, $order = 'lastpid') {
+	if(empty($threadlist)) return array();
+	$recommend_sort = $mod_recommend_sort = $digest_sort = $normal_sort = array();
+	foreach($threadlist as $_thread) {
+		if(thread_recommend_supported() && !empty($_thread['recommend'])) {
+			$recommend_sort[] = $_thread;
+		} elseif(thread_mod_recommend_supported() && !empty($_thread['mod_recommend'])) {
+			$mod_recommend_sort[] = $_thread;
+		} elseif(thread_digest_supported() && !empty($_thread['digest'])) {
+			$digest_sort[] = $_thread;
+		} else {
+			$normal_sort[] = $_thread;
+		}
+	}
+	$recommend_sort = arrlist_multisort($recommend_sort, $order, FALSE);
+	$mod_recommend_sort = arrlist_multisort($mod_recommend_sort, $order, FALSE);
+	$digest_sort = arrlist_multisort($digest_sort, $order, FALSE);
+	$normal_sort = arrlist_multisort($normal_sort, $order, FALSE);
+	return array_merge($recommend_sort, $mod_recommend_sort, $digest_sort, $normal_sort);
+}
+
 function thread_format(&$thread) {
 	
 	global $conf, $forumlist;
