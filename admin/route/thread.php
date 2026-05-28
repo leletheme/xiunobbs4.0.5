@@ -20,6 +20,8 @@ if(empty($action) || $action == 'list') {
 	$keyword = param('keyword');
 	$closed = param('closed', -1);
 	$recommend = param('recommend', -1);
+	$digest = param('digest', -1);
+	$mod_recommend = param('mod_recommend', -1);
 	$create_date_start = param('create_date_start');
 	$create_date_end = param('create_date_end');
 	$cond = array();
@@ -29,6 +31,8 @@ if(empty($action) || $action == 'list') {
 	$keyword AND $cond['subject'] = array('LIKE'=>$keyword);
 	$closed >= 0 AND $cond['closed'] = $closed;
 	thread_recommend_supported() && $recommend >= 0 AND $cond['recommend'] = $recommend;
+	thread_digest_supported() && $digest >= 0 AND $cond['digest'] = $digest;
+	thread_mod_recommend_supported() && $mod_recommend >= 0 AND $cond['mod_recommend'] = $mod_recommend;
 	$create_date_start AND $cond['create_date'] = array('>='=>strtotime($create_date_start));
 	$create_date_end AND $cond['create_date'] = array('<='=>strtotime($create_date_end) + 86400 - 1);
 	if($create_date_start && $create_date_end) {
@@ -43,11 +47,13 @@ if(empty($action) || $action == 'list') {
 		'userip'=>$userip,
 		'closed'=>$closed,
 		'recommend'=>$recommend,
+		'digest'=>$digest,
+		'mod_recommend'=>$mod_recommend,
 		'create_date_start'=>$create_date_start,
 		'create_date_end'=>$create_date_end,
 	);
 	foreach($filterarr as $_k=>$_v) {
-		if($_v === '' || $_v === NULL || ($_k != 'closed' && $_k != 'recommend' && $_v == 0)) continue;
+		if($_v === '' || $_v === NULL || ($_k != 'closed' && $_k != 'recommend' && $_k != 'digest' && $_k != 'mod_recommend' && $_v == 0)) continue;
 		$pagination_url .= '&'.$_k.'='.urlencode($_v);
 	}
 	$pagination = pagination($pagination_url, $total, $page, $pagesize);
@@ -143,6 +149,14 @@ if(empty($action) || $action == 'list') {
 			$r = thread_update($_tid, array('closed'=>1));
 		} elseif($op == 'open') {
 			$r = thread_update($_tid, array('closed'=>0));
+		} elseif($op == 'digest') {
+			$r = thread_digest_supported() ? thread_update($_tid, array('digest'=>1)) : FALSE;
+		} elseif($op == 'undigest') {
+			$r = thread_digest_supported() ? thread_update($_tid, array('digest'=>0)) : FALSE;
+		} elseif($op == 'mod_recommend') {
+			$r = thread_mod_recommend_supported() ? thread_update($_tid, array('mod_recommend'=>1)) : FALSE;
+		} elseif($op == 'unmod_recommend') {
+			$r = thread_mod_recommend_supported() ? thread_update($_tid, array('mod_recommend'=>0)) : FALSE;
 		} else {
 			$r = FALSE;
 		}
