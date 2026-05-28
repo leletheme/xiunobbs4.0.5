@@ -314,6 +314,13 @@ function post_file_list_html($filelist, $include_delete = FALSE) {
 	return $s;
 }
 
+function post_message_is_markdown($s) {
+	if($s === '') return FALSE;
+	return preg_match('/(^|\n)\s{0,3}(#{1,6}\s*\S+|[-\*]\s+|\d+\.\s+|>\s+|---+\s*$|```\w*|\|.*\|)/m', $s)
+		|| preg_match('/(^|\n)\s*```[^\n]*(\n|$)/', $s)
+		|| preg_match('/(!?\[[^\]]*\]\([^\)]+\)|\*\*[^\*]+\*\*|~~[^~]+~~|==[^=]+==|\{color:[^\}]+\})/', $s);
+}
+
 function post_format(&$post) {
 	global $conf, $uid, $sid, $gid, $longip;
 	if(empty($post)) return;
@@ -341,6 +348,10 @@ function post_format(&$post) {
 		$post['filelist'] = $filelist;
 	} else {
 		$post['filelist'] = array();
+	}
+
+	if(!empty($post['message']) && (intval(array_value($post, 'doctype', 0)) == 2 || post_message_is_markdown($post['message']))) {
+		$post['message_fmt'] = post_markdown_to_html($post['message']);
 	}
 
 	$post['classname'] = 'post';
@@ -371,24 +382,151 @@ function post_message_fmt(&$arr, $gid) {
 	!empty($arr['quotepid']) && $arr['quotepid'] > 0 && $arr['message_fmt'] = post_quote($arr['quotepid']).$arr['message_fmt'];
 }
 
-function post_markdown_to_html($s) {
-	$s = htmlspecialchars($s);
-	$s = preg_replace('#```([\s\S]*?)```#', '<pre><code>$1</code></pre>', $s);
+function post_markdown_emoji_text($s) {
+	$map = array(
+		':smile:'=>'😀', ':grin:'=>'😄', ':joy:'=>'😂', ':rofl:'=>'🤣', ':blush:'=>'😊', ':heart_eyes:'=>'😍', ':sunglasses:'=>'😎', ':thinking:'=>'🤔', ':cry:'=>'😭', ':angry:'=>'😡',
+		':thumbsup:'=>'👍', ':thumbsdown:'=>'👎', ':clap:'=>'👏', ':pray:'=>'🙏', ':muscle:'=>'💪', ':fire:'=>'🔥', ':tada:'=>'🎉', ':heart:'=>'❤️', ':100:'=>'💯', ':sparkles:'=>'✨', ':rocket:'=>'🚀', ':ok:'=>'✅', ':no:'=>'❌', ':warning:'=>'⚠️', ':bulb:'=>'💡', ':pin:'=>'📌'
+	);
+	return strtr($s, $map);
+}
+
+function post_markdown_inline($s) {
 	$s = preg_replace('#`([^`]+)`#', '<code>$1</code>', $s);
-	$s = preg_replace('#^######\s*(.+)$#m', '<h6>$1</h6>', $s);
-	$s = preg_replace('#^#####\s*(.+)$#m', '<h5>$1</h5>', $s);
-	$s = preg_replace('#^####\s*(.+)$#m', '<h4>$1</h4>', $s);
-	$s = preg_replace('#^###\s*(.+)$#m', '<h3>$1</h3>', $s);
-	$s = preg_replace('#^##\s*(.+)$#m', '<h2>$1</h2>', $s);
-	$s = preg_replace('#^#\s*(.+)$#m', '<h1>$1</h1>', $s);
 	$s = preg_replace('#\*\*([^\*]+)\*\*#', '<strong>$1</strong>', $s);
 	$s = preg_replace('#\*([^\*]+)\*#', '<em>$1</em>', $s);
-	$s = preg_replace('#^&gt;\s*(.+)$#m', '<blockquote>$1</blockquote>', $s);
+	$s = preg_replace('#~~([^~]+)~~#', '<del>$1</del>', $s);
+	$s = preg_replace('#==([^=]+)==#', '<mark>$1</mark>', $s);
+	$s = preg_replace('#\{color:([^\}]+)\}([\s\S]*?)\{/color\}#', '<span style="color:$1">$2</span>', $s);
+	$s = preg_replace('#\{center\}([\s\S]*?)\{/center\}#', '<div class="text-center">$1</div>', $s);
+	$s = preg_replace('#\{right\}([\s\S]*?)\{/right\}#', '<div class="text-right">$1</div>', $s);
 	$s = preg_replace('#!\[([^\]]*)\]\(([^\)]+)\)#', '<img src="$2" alt="$1">', $s);
 	$s = preg_replace('#\[([^\]]+)\]\(([^\)]+)\)#', '<a href="$2" target="_blank" rel="nofollow">$1</a>', $s);
-	$s = preg_replace('#^---$#m', '<hr>', $s);
-	$s = str_replace("\n", '<br>', $s);
+	$s = post_markdown_emoji_text($s);
 	return $s;
+}
+
+function post_markdown_to_html($s) {
+	$s = htmlspecialchars($s);
+	$s = str_replace("\r\n", "\n", $s);
+	$s = str_replace("\r", "\n", $s);
+	$codeblocks = array();
+	$s = preg_replace_callback('#(^|\n)\s*```[^\n]*\n?([\s\S]*?)(?:\n\s*```\s*(?=\n|$)|\s*```\s*$)#', function($m) use (&$codeblocks) {
+		$key = '%%CODEBLOCK'.count($codeblocks).'%%';
+		$codeblocks[$key] = '<pre><code>'.trim($m[2]).'</code></pre>';
+		return $m[1].$key;
+	}, $s);
+	$lines = explode("\n", $s);
+	$html = '';
+	$paragraph = array();
+	$list = '';
+	$table = array();
+	$flush_paragraph = function() use (&$html, &$paragraph) {
+		if($paragraph) {
+			$html .= '<p>'.post_markdown_inline(implode('<br>', $paragraph)).'</p>';
+			$paragraph = array();
+		}
+	};
+	$flush_list = function() use (&$html, &$list) {
+		if($list) {
+			$html .= '</'.$list.'>';
+			$list = '';
+		}
+	};
+	$flush_table = function() use (&$html, &$table) {
+		if($table) {
+			$html .= '<table class="table table-bordered table-sm"><tbody>';
+			foreach($table as $i=>$line) {
+				if(preg_match('#^\s*\|?\s*:?-{3,}:?#', $line)) continue;
+				$cells = explode('|', trim($line, '|'));
+				$html .= '<tr>';
+				foreach($cells as $cell) {
+					$tag = $i == 0 ? 'th' : 'td';
+					$html .= '<'.$tag.'>'.post_markdown_inline(trim($cell)).'</'.$tag.'>';
+				}
+				$html .= '</tr>';
+			}
+			$html .= '</tbody></table>';
+			$table = array();
+		}
+	};
+	foreach($lines as $line) {
+		$trim = trim($line);
+		if(strpos($line, '%%CODEBLOCK') === 0) {
+			$flush_paragraph();
+			$flush_list();
+			$flush_table();
+			$html .= $line;
+			continue;
+		}
+		if($trim === '') {
+			$flush_paragraph();
+			$flush_list();
+			$flush_table();
+			continue;
+		}
+		if(preg_match('#^\|.+\|$#', $line)) {
+			$flush_paragraph();
+			$flush_list();
+			$table[] = $line;
+			continue;
+		}
+		$flush_table();
+		if(preg_match('/^(#{1,6})\s*(\S.*)$/', $line, $m)) {
+			$flush_paragraph();
+			$flush_list();
+			$n = strlen($m[1]);
+			$html .= '<h'.$n.'>'.post_markdown_inline($m[2]).'</h'.$n.'>';
+			continue;
+		}
+		if(preg_match('#^\s*---+\s*$#', $line)) {
+			$flush_paragraph();
+			$flush_list();
+			$html .= '<hr>';
+			continue;
+		}
+		if(preg_match('#^&gt;\s*(.+)$#', $line, $m)) {
+			$flush_paragraph();
+			$flush_list();
+			$html .= '<blockquote>'.post_markdown_inline($m[1]).'</blockquote>';
+			continue;
+		}
+		if(preg_match('#^\s*-\s+\[([ x])\]\s+(.+)$#i', $line, $m)) {
+			$flush_paragraph();
+			if($list != 'ul') {
+				$flush_list();
+				$list = 'ul';
+				$html .= '<ul class="bbs-md-task-list">';
+			}
+			$html .= '<li><input type="checkbox" disabled'.(strtolower($m[1]) == 'x' ? ' checked' : '').'> '.post_markdown_inline($m[2]).'</li>';
+			continue;
+		}
+		if(preg_match('#^\s*[-\*]\s+(.+)$#', $line, $m)) {
+			$flush_paragraph();
+			if($list != 'ul') {
+				$flush_list();
+				$list = 'ul';
+				$html .= '<ul>';
+			}
+			$html .= '<li>'.post_markdown_inline($m[1]).'</li>';
+			continue;
+		}
+		if(preg_match('#^\s*\d+\.\s+(.+)$#', $line, $m)) {
+			$flush_paragraph();
+			if($list != 'ol') {
+				$flush_list();
+				$list = 'ol';
+				$html .= '<ol>';
+			}
+			$html .= '<li>'.post_markdown_inline($m[1]).'</li>';
+			continue;
+		}
+		$paragraph[] = $line;
+	}
+	$flush_paragraph();
+	$flush_list();
+	$flush_table();
+	foreach($codeblocks as $key=>$codehtml) $html = str_replace($key, $codehtml, $html);
+	return $html;
 }
 
 // 获取内容的简介 0: html, 1: txt; 2: markdown; 3: ubb
