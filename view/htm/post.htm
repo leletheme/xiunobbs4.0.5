@@ -60,7 +60,7 @@
 			</div>
 			<div class="card-body">
 				<form action="<?php echo $form_action;?>" method="post" id="form">
-					<input type="hidden" name="doctype" value="<?php echo $form_doctype;?>" />
+					<input type="hidden" name="doctype" value="2" />
 					<input type="hidden" name="quotepid" value="<?php echo $quotepid;?>" />
 					
 					<!--{hook post_fid_before.htm}-->
@@ -98,23 +98,57 @@
 					
 					<div class="bbs-md-editor" id="bbs_md_editor">
 						<div class="bbs-md-toolbar">
-							<button type="button" data-md="heading">标题</button>
-							<button type="button" data-md="bold">加粗</button>
-							<button type="button" data-md="italic">斜体</button>
-							<button type="button" data-md="quote">引用</button>
-							<button type="button" data-md="ul">列表</button>
-							<button type="button" data-md="ol">编号</button>
-							<button type="button" data-md="code">代码</button>
-							<button type="button" data-md="link">链接</button>
-							<button type="button" data-md="image">图片</button>
-							<button type="button" data-md="hr">分割线</button>
-							<button type="button" data-md="preview">预览</button>
+							<div class="bbs-md-toolbar-main">
+								<button type="button" data-md="h1" title="一级标题">H1</button>
+								<button type="button" data-md="h2" title="二级标题">H2</button>
+								<button type="button" data-md="h3" title="三级标题">H3</button>
+								<button type="button" data-md="bold" title="加粗 Ctrl+B"><b>B</b></button>
+								<button type="button" data-md="italic" title="斜体 Ctrl+I"><i>I</i></button>
+								<button type="button" data-md="strike" title="删除线"><s>S</s></button>
+								<button type="button" data-md="quote" title="引用">引用</button>
+								<button type="button" data-md="ul" title="无序列表">列表</button>
+								<button type="button" data-md="ol" title="有序列表">编号</button>
+								<button type="button" data-md="task" title="任务清单">任务</button>
+								<button type="button" data-md="table" title="表格">表格</button>
+								<button type="button" data-md="code" title="行内代码">代码</button>
+								<button type="button" data-md="codeblock" title="代码块">代码块</button>
+								<button type="button" data-md="link" title="链接 Ctrl+K">链接</button>
+							</div>
+							<div class="bbs-md-toolbar-actions">
+								<button type="button" data-md="undo" title="撤销 Ctrl+Z">撤销</button>
+								<button type="button" data-md="redo" title="重做 Ctrl+Y">重做</button>
+								<button type="button" data-md="fullscreen" title="沉浸写作">全屏</button>
+								<button type="button" data-md="preview" title="预览 Ctrl+P">预览</button>
+							</div>
 						</div>
+						<div class="bbs-md-toolbar bbs-md-toolbar-secondary">
+							<div class="bbs-md-toolbar-main">
+								<button type="button" data-md="image" title="上传图片">图片</button>
+								<button type="button" data-md="hr" title="分割线">分割线</button>
+								<button type="button" data-md="color" data-value="#e11d48">红色</button>
+								<button type="button" data-md="color" data-value="#2563eb">蓝色</button>
+								<button type="button" data-md="color" data-value="#16a34a">绿色</button>
+								<button type="button" data-md="mark">高亮</button>
+								<button type="button" data-md="center">居中</button>
+								<button type="button" data-md="right">右对齐</button>
+								<button type="button" data-md="emoji" data-value=":smile:">😀</button>
+								<button type="button" data-md="emoji" data-value=":thumbsup:">👍</button>
+								<button type="button" data-md="emoji" data-value=":fire:">🔥</button>
+								<button type="button" data-md="emoji" data-value=":tada:">🎉</button>
+								<button type="button" data-md="emoji_panel">更多表情</button>
+								<button type="button" data-md="clear">清空</button>
+							</div>
+							<div class="bbs-md-counter"><span id="bbs_md_words">0</span> 字 / <span id="bbs_md_lines">1</span> 行</div>
+						</div>
+						<div class="bbs-md-emoji-panel" id="bbs_md_emoji_panel">
+							<button type="button" data-emoji=":smile:">😀</button><button type="button" data-emoji=":grin:">😄</button><button type="button" data-emoji=":joy:">😂</button><button type="button" data-emoji=":rofl:">🤣</button><button type="button" data-emoji=":blush:">😊</button><button type="button" data-emoji=":heart_eyes:">😍</button><button type="button" data-emoji=":sunglasses:">😎</button><button type="button" data-emoji=":thinking:">🤔</button><button type="button" data-emoji=":cry:">😭</button><button type="button" data-emoji=":angry:">😡</button><button type="button" data-emoji=":thumbsup:">👍</button><button type="button" data-emoji=":thumbsdown:">👎</button><button type="button" data-emoji=":clap:">👏</button><button type="button" data-emoji=":pray:">🙏</button><button type="button" data-emoji=":muscle:">💪</button><button type="button" data-emoji=":fire:">🔥</button><button type="button" data-emoji=":tada:">🎉</button><button type="button" data-emoji=":heart:">❤️</button><button type="button" data-emoji=":100:">💯</button><button type="button" data-emoji=":sparkles:">✨</button><button type="button" data-emoji=":rocket:">🚀</button><button type="button" data-emoji=":ok:">✅</button><button type="button" data-emoji=":no:">❌</button><button type="button" data-emoji=":warning:">⚠️</button><button type="button" data-emoji=":bulb:">💡</button><button type="button" data-emoji=":pin:">📌</button>
+						</div>
+						<input type="file" id="bbs_md_image_upload" accept="image/gif,image/jpeg,image/png,image/jpg,image/bmp" class="d-none" multiple="multiple">
 						<div class="bbs-md-workspace">
 							<textarea class="form-control bbs-md-textarea" placeholder="<?php echo lang('message');?>" name="message" id="message"><?php echo $form_message;?></textarea>
 							<div class="bbs-md-preview markdown-body" id="bbs_md_preview"></div>
 						</div>
-						<div class="bbs-md-tips">支持 Markdown：标题、加粗、引用、列表、代码、链接和图片。</div>
+						<div class="bbs-md-tips">支持 Markdown、表格、任务清单、代码块、图片、链接、颜色、高亮、对齐、实时预览、全屏写作与快捷键。</div>
 					</div>
 					
 					<!--{hook post_message_after.htm}-->
@@ -225,33 +259,220 @@ jattachparent.on('click', 'a.delete', function() {
 var jmdeditor = $('#bbs_md_editor');
 var jmessage = $('#message');
 var jpreview = $('#bbs_md_preview');
+var jimageupload = $('#bbs_md_image_upload');
+var jwords = $('#bbs_md_words');
+var jlines = $('#bbs_md_lines');
+var bbs_md_history = [];
+var bbs_md_history_index = -1;
+var bbs_md_history_lock = false;
 
 function bbs_md_escape(s) {
 	return $('<div>').text(s).html();
 }
 
-function bbs_md_render(s) {
-	s = bbs_md_escape(s || '');
-	s = s.replace(/^######\s*(.+)$/gm, '<h6>$1</h6>');
-	s = s.replace(/^#####\s*(.+)$/gm, '<h5>$1</h5>');
-	s = s.replace(/^####\s*(.+)$/gm, '<h4>$1</h4>');
-	s = s.replace(/^###\s*(.+)$/gm, '<h3>$1</h3>');
-	s = s.replace(/^##\s*(.+)$/gm, '<h2>$1</h2>');
-	s = s.replace(/^#\s*(.+)$/gm, '<h1>$1</h1>');
-	s = s.replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>');
+function bbs_md_emoji_text(s) {
+	var map = {
+		':smile:':'😀', ':grin:':'😄', ':joy:':'😂', ':rofl:':'🤣', ':blush:':'😊', ':heart_eyes:':'😍', ':sunglasses:':'😎', ':thinking:':'🤔', ':cry:':'😭', ':angry:':'😡',
+		':thumbsup:':'👍', ':thumbsdown:':'👎', ':clap:':'👏', ':pray:':'🙏', ':muscle:':'💪', ':fire:':'🔥', ':tada:':'🎉', ':heart:':'❤️', ':100:':'💯', ':sparkles:':'✨', ':rocket:':'🚀', ':ok:':'✅', ':no:':'❌', ':warning:':'⚠️', ':bulb:':'💡', ':pin:':'📌'
+	};
+	return s.replace(/:(smile|grin|joy|rofl|blush|heart_eyes|sunglasses|thinking|cry|angry|thumbsup|thumbsdown|clap|pray|muscle|fire|tada|heart|100|sparkles|rocket|ok|no|warning|bulb|pin):/g, function(m) {
+		return map[m] || m;
+	});
+}
+
+function bbs_md_inline(s) {
 	s = s.replace(/`([^`]+)`/g, '<code>$1</code>');
 	s = s.replace(/\*\*([^\*]+)\*\*/g, '<strong>$1</strong>');
 	s = s.replace(/\*([^\*]+)\*/g, '<em>$1</em>');
-	s = s.replace(/^&gt;\s*(.+)$/gm, '<blockquote>$1</blockquote>');
+	s = s.replace(/~~([^~]+)~~/g, '<del>$1</del>');
+	s = s.replace(/==([^=]+)==/g, '<mark>$1</mark>');
+	s = s.replace(/\{color:([^\}]+)\}([\s\S]*?)\{\/color\}/g, '<span style="color:$1">$2</span>');
+	s = s.replace(/\{center\}([\s\S]*?)\{\/center\}/g, '<div class="text-center">$1</div>');
+	s = s.replace(/\{right\}([\s\S]*?)\{\/right\}/g, '<div class="text-right">$1</div>');
 	s = s.replace(/!\[([^\]]*)\]\(([^\)]+)\)/g, '<img src="$2" alt="$1">');
 	s = s.replace(/\[([^\]]+)\]\(([^\)]+)\)/g, '<a href="$2" target="_blank">$1</a>');
-	s = s.replace(/^---$/gm, '<hr>');
-	s = s.replace(/\n/g, '<br>');
+	s = bbs_md_emoji_text(s);
 	return s;
 }
 
+function bbs_md_render_table(lines) {
+	var html = '<table class="table table-bordered table-sm"><tbody>';
+	for(var i = 0; i < lines.length; i++) {
+		if(/^\s*\|?\s*:?-{3,}:?/.test(lines[i])) continue;
+		var cells = lines[i].replace(/^\||\|$/g, '').split('|');
+		html += '<tr>';
+		for(var j = 0; j < cells.length; j++) {
+			var tag = i == 0 ? 'th' : 'td';
+			html += '<' + tag + '>' + bbs_md_inline($.trim(cells[j])) + '</' + tag + '>';
+		}
+		html += '</tr>';
+	}
+	html += '</tbody></table>';
+	return html;
+}
+
+function bbs_md_render(s) {
+	s = bbs_md_escape(s || '').replace(/\r\n/g, '\n');
+	var codeblocks = [];
+	s = s.replace(/```[^\n]*\n?([\s\S]*?)```/g, function(all, code) {
+		var key = '%%CODEBLOCK' + codeblocks.length + '%%';
+		codeblocks.push('<pre><code>' + code.replace(/^\n|\n$/g, '') + '</code></pre>');
+		return key;
+	});
+	var lines = s.split('\n');
+	var html = '';
+	var paragraph = [];
+	var list = null;
+	var table = [];
+	function flushParagraph() {
+		if(paragraph.length) {
+			html += '<p>' + bbs_md_inline(paragraph.join('<br>')) + '</p>';
+			paragraph = [];
+		}
+	}
+	function flushList() {
+		if(list) {
+			html += '</' + list + '>';
+			list = null;
+		}
+	}
+	function flushTable() {
+		if(table.length) {
+			html += bbs_md_render_table(table);
+			table = [];
+		}
+	}
+	for(var i = 0; i < lines.length; i++) {
+		var line = lines[i];
+		if(line.indexOf('%%CODEBLOCK') === 0) {
+			flushParagraph();
+			flushList();
+			flushTable();
+			html += line;
+			continue;
+		}
+		if($.trim(line) === '') {
+			flushParagraph();
+			flushList();
+			flushTable();
+			continue;
+		}
+		if(/^\|.+\|$/.test(line)) {
+			flushParagraph();
+			flushList();
+			table.push(line);
+			continue;
+		}
+		flushTable();
+		var heading = line.match(/^(#{1,6})\s*(\S.*)$/);
+		if(heading) {
+			flushParagraph();
+			flushList();
+			html += '<h' + heading[1].length + '>' + bbs_md_inline(heading[2]) + '</h' + heading[1].length + '>';
+			continue;
+		}
+		if(/^---+$/.test($.trim(line))) {
+			flushParagraph();
+			flushList();
+			html += '<hr>';
+			continue;
+		}
+		if(/^&gt;\s*(.+)$/.test(line)) {
+			flushParagraph();
+			flushList();
+			html += '<blockquote>' + bbs_md_inline(line.replace(/^&gt;\s*/, '')) + '</blockquote>';
+			continue;
+		}
+		var task = line.match(/^\s*-\s+\[([ x])\]\s+(.+)$/i);
+		if(task) {
+			flushParagraph();
+			if(list != 'ul') {
+				flushList();
+				list = 'ul';
+				html += '<ul class="bbs-md-task-list">';
+			}
+			html += '<li><input type="checkbox" disabled' + (task[1].toLowerCase() == 'x' ? ' checked' : '') + '> ' + bbs_md_inline(task[2]) + '</li>';
+			continue;
+		}
+		var ul = line.match(/^\s*[-*]\s+(.+)$/);
+		if(ul) {
+			flushParagraph();
+			if(list != 'ul') {
+				flushList();
+				list = 'ul';
+				html += '<ul>';
+			}
+			html += '<li>' + bbs_md_inline(ul[1]) + '</li>';
+			continue;
+		}
+		var ol = line.match(/^\s*\d+\.\s+(.+)$/);
+		if(ol) {
+			flushParagraph();
+			if(list != 'ol') {
+				flushList();
+				list = 'ol';
+				html += '<ol>';
+			}
+			html += '<li>' + bbs_md_inline(ol[1]) + '</li>';
+			continue;
+		}
+		paragraph.push(line);
+	}
+	flushParagraph();
+	flushList();
+	flushTable();
+	for(var k = 0; k < codeblocks.length; k++) html = html.replace('%%CODEBLOCK' + k + '%%', codeblocks[k]);
+	return html;
+}
+
 function bbs_md_update_preview() {
-	jpreview.html(bbs_md_render(jmessage.val()));
+	var val = jmessage.val();
+	jpreview.html(bbs_md_render(val));
+	jwords.text($.trim(val).replace(/\s+/g, '').length);
+	jlines.text(val ? val.split(/\r\n|\r|\n/).length : 1);
+}
+
+function bbs_md_save_history() {
+	if(bbs_md_history_lock) return;
+	var val = jmessage.val();
+	if(bbs_md_history[bbs_md_history_index] === val) return;
+	bbs_md_history = bbs_md_history.slice(0, bbs_md_history_index + 1);
+	bbs_md_history.push(val);
+	if(bbs_md_history.length > 80) bbs_md_history.shift();
+	bbs_md_history_index = bbs_md_history.length - 1;
+}
+
+function bbs_md_restore_history(index) {
+	if(index < 0 || index >= bbs_md_history.length) return;
+	var el = jmessage.get(0);
+	var textareaScrollTop = el.scrollTop;
+	var pageScrollTop = $(window).scrollTop();
+	bbs_md_history_lock = true;
+	bbs_md_history_index = index;
+	jmessage.val(bbs_md_history[index]);
+	bbs_md_update_preview();
+	bbs_md_history_lock = false;
+	setTimeout(function() {
+		bbs_md_restore_focus(el.selectionStart || 0, el.selectionEnd || 0, textareaScrollTop, pageScrollTop);
+	}, 0);
+}
+
+function bbs_md_restore_focus(selectionStart, selectionEnd, textareaScrollTop, pageScrollTop) {
+	var el = jmessage.get(0);
+	el.focus({preventScroll: true});
+	el.selectionStart = selectionStart;
+	el.selectionEnd = selectionEnd;
+	el.scrollTop = textareaScrollTop;
+	$(window).scrollTop(pageScrollTop);
+}
+
+function bbs_md_set_value(val, selectionStart, selectionEnd, textareaScrollTop, pageScrollTop) {
+	jmessage.val(val);
+	bbs_md_update_preview();
+	bbs_md_save_history();
+	setTimeout(function() {
+		bbs_md_restore_focus(selectionStart, selectionEnd, textareaScrollTop, pageScrollTop);
+	}, 0);
 }
 
 function bbs_md_insert(before, after, placeholder) {
@@ -259,38 +480,160 @@ function bbs_md_insert(before, after, placeholder) {
 	var val = jmessage.val();
 	var start = el.selectionStart || 0;
 	var end = el.selectionEnd || 0;
+	var textareaScrollTop = el.scrollTop;
+	var pageScrollTop = $(window).scrollTop();
 	var selected = val.substring(start, end) || placeholder || '';
 	var text = before + selected + (after || '');
-	jmessage.val(val.substring(0, start) + text + val.substring(end));
-	el.focus();
-	el.selectionStart = start + before.length;
-	el.selectionEnd = start + before.length + selected.length;
-	bbs_md_update_preview();
+	var selectionStart = start + before.length;
+	var selectionEnd = selectionStart + selected.length;
+	bbs_md_set_value(val.substring(0, start) + text + val.substring(end), selectionStart, selectionEnd, textareaScrollTop, pageScrollTop);
 }
 
-$('.bbs-md-toolbar button').on('click', function() {
+function bbs_md_insert_lines(prefix, placeholder) {
+	var el = jmessage.get(0);
+	var val = jmessage.val();
+	var start = el.selectionStart || 0;
+	var end = el.selectionEnd || 0;
+	var textareaScrollTop = el.scrollTop;
+	var pageScrollTop = $(window).scrollTop();
+	var selected = val.substring(start, end) || placeholder || '列表项';
+	var lines = selected.split(/\r\n|\r|\n/);
+	for(var i = 0; i < lines.length; i++) lines[i] = (typeof prefix == 'function' ? prefix(i) : prefix) + lines[i].replace(/^\s+/, '');
+	var text = lines.join('\n');
+	var selectionStart = start;
+	var selectionEnd = start + text.length;
+	bbs_md_set_value(val.substring(0, start) + text + val.substring(end), selectionStart, selectionEnd, textareaScrollTop, pageScrollTop);
+}
+
+function bbs_md_upload_images(files) {
+	if(!files || !files.length) return;
+	var el = jmessage.get(0);
+	var textareaScrollTop = el.scrollTop;
+	var pageScrollTop = $(window).scrollTop();
+	$.each_sync(files, function(i, callback) {
+		var file = files[i];
+		if(!/^image\//i.test(file.type || '')) {
+			$.alert('请选择图片文件');
+			callback();
+			return;
+		}
+		xn.upload_file(file, xn.url('attach-create'), {is_image: 1}, function(code, message) {
+			if(code != 0) {
+				$.alert(message);
+				callback();
+				return;
+			}
+			var alt = message.orgfilename || '图片';
+			bbs_md_insert('![' + alt + '](', ')', message.url);
+			var aid = message.aid;
+			var filetype = message.filetype || 'image';
+			if(!jattachparent.find('.attachlist').length) {
+				jattachparent.append('<fieldset class="fieldset"><legend><?php echo lang('uploaded_attach');?></legend><ul class="attachlist"><ul></fieldset>');
+			}
+			$('.attachlist').append('<li aid="' + aid + '"><a href="' + message.url + '" target="_blank"><i class="icon filetype ' + filetype + '"></i> ' + alt + '</a> <a href="javascript:void(0);" class="delete ml-2"><i class="icon-remove"></i> <?php echo lang('delete');?></a></li>');
+			setTimeout(function() {
+				el.scrollTop = textareaScrollTop;
+				$(window).scrollTop(pageScrollTop);
+			}, 0);
+			callback();
+		}, function() {});
+	});
+}
+
+jimageupload.on('change', function(e) {
+	var files = xn.get_files_from_event(e);
+	bbs_md_upload_images(files);
+	this.value = '';
+});
+
+$('.bbs-md-toolbar button, .bbs-md-emoji-panel button').on('click', function() {
+	var emoji = $(this).data('emoji');
+	if(emoji) {
+		bbs_md_insert(emoji, '', '');
+		return false;
+	}
 	var type = $(this).data('md');
+	var value = $(this).data('value');
 	if(type == 'preview') {
 		jmdeditor.toggleClass('preview-on');
 		$(this).toggleClass('active');
 		bbs_md_update_preview();
 		return false;
 	}
-	if(type == 'heading') bbs_md_insert('# ', '', '标题');
+	if(type == 'fullscreen') {
+		jmdeditor.toggleClass('fullscreen-on');
+		$(this).toggleClass('active');
+		jmessage.focus();
+		return false;
+	}
+	if(type == 'undo') bbs_md_restore_history(bbs_md_history_index - 1);
+	if(type == 'redo') bbs_md_restore_history(bbs_md_history_index + 1);
+	if(type == 'h1') bbs_md_insert('# ', '', '一级标题');
+	if(type == 'h2') bbs_md_insert('## ', '', '二级标题');
+	if(type == 'h3') bbs_md_insert('### ', '', '三级标题');
 	if(type == 'bold') bbs_md_insert('**', '**', '加粗文字');
 	if(type == 'italic') bbs_md_insert('*', '*', '斜体文字');
-	if(type == 'quote') bbs_md_insert('> ', '', '引用内容');
-	if(type == 'ul') bbs_md_insert('- ', '', '列表项');
-	if(type == 'ol') bbs_md_insert('1. ', '', '列表项');
+	if(type == 'strike') bbs_md_insert('~~', '~~', '删除线文字');
+	if(type == 'quote') bbs_md_insert_lines('> ', '引用内容');
+	if(type == 'ul') bbs_md_insert_lines('- ', '列表项');
+	if(type == 'ol') bbs_md_insert_lines(function(i) { return (i + 1) + '. '; }, '列表项');
+	if(type == 'task') bbs_md_insert_lines('- [ ] ', '待办事项');
 	if(type == 'code') bbs_md_insert('`', '`', '代码');
+	if(type == 'codeblock') bbs_md_insert('\n```\n', '\n```\n', '在这里输入代码');
 	if(type == 'link') bbs_md_insert('[', '](https://)', '链接文字');
-	if(type == 'image') bbs_md_insert('![', '](https://)', '图片描述');
+	if(type == 'image') {
+		jimageupload.trigger('click');
+		return false;
+	}
 	if(type == 'hr') bbs_md_insert('\n---\n', '', '');
+	if(type == 'table') bbs_md_insert('\n| 标题一 | 标题二 | 标题三 |\n| --- | --- | --- |\n| 内容 | 内容 | 内容 |\n', '', '');
+	if(type == 'color') bbs_md_insert('{color:' + value + '}', '{/color}', '彩色文字');
+	if(type == 'mark') bbs_md_insert('==', '==', '高亮文字');
+	if(type == 'center') bbs_md_insert('{center}\n', '\n{/center}', '居中内容');
+	if(type == 'right') bbs_md_insert('{right}\n', '\n{/right}', '右对齐内容');
+	if(type == 'emoji') bbs_md_insert(value, '', '');
+	if(type == 'emoji_panel') {
+		$('#bbs_md_emoji_panel').toggleClass('show');
+		return false;
+	}
+	if(type == 'clear' && window.confirm('确定要清空编辑器内容吗？')) {
+		jmessage.val('');
+		bbs_md_update_preview();
+		bbs_md_save_history();
+	}
 	return false;
 });
 
-jmessage.on('input', bbs_md_update_preview);
+jmessage.on('input', function() {
+	bbs_md_update_preview();
+	bbs_md_save_history();
+});
+
+jmessage.on('keydown', function(e) {
+	if(e.ctrlKey && e.keyCode == 66) {
+		e.preventDefault();
+		bbs_md_insert('**', '**', '加粗文字');
+	}
+	if(e.ctrlKey && e.keyCode == 73) {
+		e.preventDefault();
+		bbs_md_insert('*', '*', '斜体文字');
+	}
+	if(e.ctrlKey && e.keyCode == 75) {
+		e.preventDefault();
+		bbs_md_insert('[', '](https://)', '链接文字');
+	}
+	if(e.ctrlKey && e.keyCode == 80) {
+		e.preventDefault();
+		$('.bbs-md-toolbar button[data-md="preview"]').trigger('click');
+	}
+	if(e.ctrlKey && e.keyCode == 89) {
+		e.preventDefault();
+		bbs_md_restore_history(bbs_md_history_index + 1);
+	}
+});
+
 bbs_md_update_preview();
+bbs_md_save_history();
 
 jform.find('[name="fid"]').checked(<?php echo $fid;?>);
 
