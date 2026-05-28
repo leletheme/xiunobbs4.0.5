@@ -52,6 +52,8 @@ if($action == 'create') {
 		xn_strlen($brief) > 240 AND message('brief', '摘要长度不能超过 240 个字符');
 		$tags = thread_tags_supported() ? thread_tags_filter(param('tags', '', FALSE)) : '';
 		$recommend = thread_recommend_supported() && forum_access_mod($fid, $gid, 'allowtop') ? param('recommend', 0) : 0;
+		$digest = thread_digest_supported() && forum_access_mod($fid, $gid, 'allowtop') ? param('digest', 0) : 0;
+		$mod_recommend = thread_mod_recommend_supported() && forum_access_mod($fid, $gid, 'allowtop') ? param('mod_recommend', 0) : 0;
 		
 		$message = param('message', '', FALSE);
 		empty($message) AND message('message', lang('please_input_message'));
@@ -67,6 +69,8 @@ if($action == 'create') {
 			'brief'=>$brief,
 			'tags'=>$tags,
 			'recommend'=>$recommend,
+			'digest'=>$digest,
+			'mod_recommend'=>$mod_recommend,
 			'message'=>$message,
 			'time'=>$time,
 			'longip'=>$longip,
