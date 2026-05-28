@@ -104,6 +104,9 @@ if($threadlist) {
 		$thread['brief'] = $brief;
 	}
 	unset($thread);
+	if($page == 1) {
+		$threadlist = thread_special_sort($threadlist, $tab == 'hot' ? 'views' : $order);
+	}
 }
 
 $user_rank_cond = array('uid'=>array('>'=>0), 'gid'=>array('<>'=>7));
