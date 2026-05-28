@@ -1107,7 +1107,6 @@ li.quote {
   text-align: center;
   transform: rotate(45deg);
   box-shadow: 0 10px 22px rgba(29, 115, 255, 0.22);
-  animation: bbsRibbonFloat 2.8s ease-in-out infinite;
 }
 
 .bbs-feed-corner-top span {
@@ -1134,17 +1133,6 @@ li.quote {
 
 .bbs-feed-card-mod {
   border-color: rgba(16, 185, 129, 0.22);
-}
-
-@keyframes bbsRibbonFloat {
-  0%, 100% {
-    filter: brightness(1);
-    transform: rotate(45deg) translateY(0);
-  }
-  50% {
-    filter: brightness(1.08);
-    transform: rotate(45deg) translateY(-1px);
-  }
 }
 
 .bbs-feed-card-head {
@@ -1338,6 +1326,39 @@ li.quote {
 .bbs-feed-tag-top {
   color: #1d73ff;
   background: #eef5ff;
+}
+
+.bbs-dz-label {
+  display: inline-flex;
+  align-items: center;
+  height: 20px;
+  margin-right: 6px;
+  padding: 0 6px;
+  border-radius: 3px;
+  font-size: 0.72rem;
+  font-weight: 900;
+  line-height: 20px;
+  vertical-align: 2px;
+}
+
+.bbs-dz-label::before {
+  content: "[";
+  margin-right: 1px;
+}
+
+.bbs-dz-label::after {
+  content: "]";
+  margin-left: 1px;
+}
+
+.bbs-dz-label-top {
+  color: #e11d48;
+  background: rgba(225, 29, 72, 0.08);
+}
+
+.bbs-dz-label-digest {
+  color: #f59e0b;
+  background: rgba(245, 158, 11, 0.1);
 }
 
 .bbs-feed-tag-digest {
@@ -2994,6 +3015,16 @@ li.quote {
   background: rgba(37, 49, 73, 0.78);
 }
 
+.bbs-theme-dark .bbs-dz-label-top {
+  color: #fb7185;
+  background: rgba(225, 29, 72, 0.16);
+}
+
+.bbs-theme-dark .bbs-dz-label-digest {
+  color: #fbbf24;
+  background: rgba(245, 158, 11, 0.16);
+}
+
 .bbs-theme-dark .bbs-feed-custom-tag {
   color: #b8c7e3;
   border-color: rgba(129, 140, 248, 0.18);
@@ -4608,18 +4639,57 @@ li.quote {
 }
 
 .bbs-side-rank-row b {
-  color: #ff2f72;
-  font-size: 0.78rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.2rem;
+  min-width: 42px;
+  color: #8b5cf6;
+  font-size: 0.9rem;
   font-weight: 950;
   white-space: nowrap;
+  transition: transform 0.18s ease, filter 0.18s ease;
+}
+
+.bbs-side-rank-row b i {
+  color: currentColor;
+  font-size: 1.05rem;
+  filter: drop-shadow(0 4px 8px rgba(139, 92, 246, 0.22));
+}
+
+.bbs-side-rank-row b small {
+  color: currentColor;
+  font-size: 0.78rem;
+  font-weight: 950;
+}
+
+.bbs-side-rank-row:hover b {
+  filter: brightness(1.08);
+  transform: translateY(-1px) scale(1.06);
+}
+
+.bbs-side-rank-row.rank-1 b {
+  color: #f59e0b;
+}
+
+.bbs-side-rank-row.rank-1 b i {
+  filter: drop-shadow(0 5px 10px rgba(245, 158, 11, 0.28));
 }
 
 .bbs-side-rank-row.rank-2 b {
-  color: #ff7a2d;
+  color: #94a3b8;
+}
+
+.bbs-side-rank-row.rank-2 b i {
+  filter: drop-shadow(0 5px 10px rgba(148, 163, 184, 0.26));
 }
 
 .bbs-side-rank-row.rank-3 b {
-  color: #2563eb;
+  color: #d97706;
+}
+
+.bbs-side-rank-row.rank-3 b i {
+  filter: drop-shadow(0 5px 10px rgba(217, 119, 6, 0.24));
 }
 
 .bbs-side-tag-list {
