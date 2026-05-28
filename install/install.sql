@@ -117,6 +117,8 @@ CREATE TABLE bbs_thread (
   subject char(128) NOT NULL default '',		# 主题
   brief char(240) NOT NULL default '',		# 主题摘要
   recommend tinyint(1) unsigned NOT NULL default '0',	# 首页首屏推荐
+  digest tinyint(1) unsigned NOT NULL default '0',	# 精选主题
+  mod_recommend tinyint(1) unsigned NOT NULL default '0',	# 版主推荐
   tags char(120) NOT NULL default '',		# 主题标签，英文逗号分隔
   create_date int(11) unsigned NOT NULL default '0',	# 发帖时间
   last_date int(11) unsigned NOT NULL default '0',	# 最后回复时间
