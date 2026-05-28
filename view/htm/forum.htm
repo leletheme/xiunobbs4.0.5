@@ -35,9 +35,9 @@
 			<div class="threadlist bbs-forum-threadlist">
 				<!--{hook forum_threadlist_before.htm}-->
 				<?php if($threadlist) { foreach($threadlist as &$_thread) { ?>
-				<div class="bbs-feed-card bbs-forum-thread-card thread" data-href="<?php echo url("thread-$_thread[tid]");?>" data-tid="<?php echo $_thread['tid'];?>">
+				<div class="bbs-feed-card bbs-forum-thread-card thread<?php echo $_thread['top'] > 0 ? ' bbs-feed-card-top' : ''; ?><?php echo !empty($_thread['recommend']) ? ' bbs-feed-card-recommend' : ''; ?><?php echo !empty($_thread['digest']) ? ' bbs-feed-card-digest' : ''; ?><?php echo !empty($_thread['mod_recommend']) ? ' bbs-feed-card-mod' : ''; ?>" data-href="<?php echo url("thread-$_thread[tid]");?>" data-tid="<?php echo $_thread['tid'];?>">
 					<?php if(!empty($_thread['allowtop'])) { ?><input type="checkbox" name="modtid" class="bbs-feed-check" value="<?php echo $_thread['tid'];?>" /><?php } ?>
-					<?php if($_thread['top'] > 0) { ?><div class="bbs-feed-ribbon">TOP</div><?php } ?>
+					<?php if($_thread['top'] > 0) { ?><div class="bbs-feed-corner bbs-feed-corner-top"><span>置顶</span></div><?php } elseif(!empty($_thread['digest'])) { ?><div class="bbs-feed-corner bbs-feed-corner-digest"><span>精华</span></div><?php } elseif(!empty($_thread['recommend'])) { ?><div class="bbs-feed-corner bbs-feed-corner-recommend"><span>推荐</span></div><?php } elseif(!empty($_thread['mod_recommend'])) { ?><div class="bbs-feed-corner bbs-feed-corner-mod"><span>版推</span></div><?php } ?>
 					<div class="bbs-forum-thread-head">
 						<a class="bbs-feed-meta-author" href="<?php echo url("user-$_thread[uid]");?>"><img src="<?php echo $_thread['user_avatar_url'];?>"><?php echo $_thread['username'];?></a>
 						<span><i class="icon-clock-o"></i><?php echo $_thread['create_date_fmt'];?></span>
@@ -53,7 +53,10 @@
 						<?php if(!empty($_thread['taglist'])) { foreach($_thread['taglist'] as $_tag) { ?>
 						<span class="bbs-feed-tag bbs-feed-custom-tag"><?php echo $_tag;?></span>
 						<?php }} ?>
-						<?php if($_thread['top'] > 0) { ?><span class="bbs-feed-tag">置顶</span><?php } ?>
+						<?php if($_thread['top'] > 0) { ?><span class="bbs-feed-tag bbs-feed-tag-top">置顶</span><?php } ?>
+						<?php if(!empty($_thread['recommend'])) { ?><span class="bbs-feed-tag bbs-feed-tag-recommend">首页推荐</span><?php } ?>
+						<?php if(!empty($_thread['digest'])) { ?><span class="bbs-feed-tag bbs-feed-tag-digest">精华</span><?php } ?>
+						<?php if(!empty($_thread['mod_recommend'])) { ?><span class="bbs-feed-tag bbs-feed-tag-mod">版主推荐</span><?php } ?>
 					</div>
 				</div>
 				<?php }} else { ?>
