@@ -12,6 +12,8 @@
 		$form_message = '';
 		$form_doctype = 2;
 		$form_recommend = 0;
+		$form_digest = 0;
+		$form_mod_recommend = 0;
 		$isfirst = 1;
 		$quotepid = 0;
 		$location = url("forum-'+jfid.checked()+'");
@@ -26,6 +28,8 @@
 		$form_message = $post['message'];
 		$form_doctype = $post['doctype'] ? $post['doctype'] : 2;
 		$form_recommend = intval(array_value($thread, 'recommend', 0));
+		$form_digest = intval(array_value($thread, 'digest', 0));
+		$form_mod_recommend = intval(array_value($thread, 'mod_recommend', 0));
 		$isfirst = $post['isfirst'];
 		$quotepid = $post['quotepid'];
 		$location = url("thread-$tid");
@@ -39,6 +43,8 @@
 		$form_message = '';
 		$form_doctype = 2;
 		$form_recommend = 0;
+		$form_digest = 0;
+		$form_mod_recommend = 0;
 		$isfirst = 0;
 		//$quotepid = 0;
 		$location = url("thread-$tid");
@@ -86,7 +92,13 @@
 					<?php if(thread_recommend_supported() && forum_access_mod($fid, $gid, 'allowtop')) { ?>
 					<div class="form-group bbs-recommend-setting">
 						<label><input type="checkbox" name="recommend" value="1"<?php echo $form_recommend ? ' checked' : '';?>> 首页首屏推荐</label>
-						<div class="small text-muted">勾选后该主题会显示在首页顶部推荐卡片中。</div>
+						<?php if(thread_digest_supported()) { ?>
+						<label class="ml-3"><input type="checkbox" name="digest" value="1"<?php echo $form_digest ? ' checked' : '';?>> 精选</label>
+						<?php } ?>
+						<?php if(thread_mod_recommend_supported()) { ?>
+						<label class="ml-3"><input type="checkbox" name="mod_recommend" value="1"<?php echo $form_mod_recommend ? ' checked' : '';?>> 版主推荐</label>
+						<?php } ?>
+						<div class="small text-muted">可在首页列表展示置顶、精选、版主推荐等角标效果。</div>
 					</div>
 					<?php } ?>
 					<div class="form-group bbs-post-tags-group">
