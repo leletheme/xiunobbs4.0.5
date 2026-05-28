@@ -45,9 +45,9 @@
 			<div class="threadlist">
 				<!--{hook index_threadlist_before.htm}-->
 				<?php if($threadlist) { foreach($threadlist as &$_thread) { $_forum = array_value($forumlist, $_thread['fid'], array('name'=>'默认版块')); ?>
-				<div class="bbs-feed-card thread" data-tid="<?php echo $_thread['tid'];?>">
+				<div class="bbs-feed-card thread<?php echo $_thread['top'] > 0 ? ' bbs-feed-card-top' : ''; ?><?php echo !empty($_thread['digest']) ? ' bbs-feed-card-digest' : ''; ?><?php echo !empty($_thread['mod_recommend']) ? ' bbs-feed-card-mod' : ''; ?>" data-tid="<?php echo $_thread['tid'];?>">
 					<?php if(!empty($_thread['allowtop'])) { ?><input type="checkbox" name="modtid" class="bbs-feed-check" value="<?php echo $_thread['tid'];?>" /><?php } ?>
-					<?php if($_thread['top'] > 0) { ?><div class="bbs-feed-ribbon">TOP</div><?php } ?>
+					<?php if($_thread['top'] > 0) { ?><div class="bbs-feed-corner bbs-feed-corner-top"><span>置顶</span></div><?php } elseif(!empty($_thread['digest'])) { ?><div class="bbs-feed-corner bbs-feed-corner-digest"><span>精选</span></div><?php } elseif(!empty($_thread['mod_recommend'])) { ?><div class="bbs-feed-corner bbs-feed-corner-mod"><span>版推</span></div><?php } ?>
 					<div class="bbs-feed-card-body">
 						<h2><a href="<?php echo url("thread-$_thread[tid]");?>"><?php echo $_thread['subject'];?></a></h2>
 						<?php if(!empty($_thread['brief'])) { ?><p><?php echo $_thread['brief'];?></p><?php } ?>
@@ -62,7 +62,9 @@
 						<?php if(!empty($_thread['taglist'])) { foreach($_thread['taglist'] as $_tag) { ?>
 						<span class="bbs-feed-tag bbs-feed-custom-tag"><?php echo $_tag;?></span>
 						<?php }} ?>
-						<?php if($_thread['top'] > 0) { ?><span class="bbs-feed-tag">置顶</span><?php } ?>
+						<?php if($_thread['top'] > 0) { ?><span class="bbs-feed-tag bbs-feed-tag-top">置顶</span><?php } ?>
+						<?php if(!empty($_thread['digest'])) { ?><span class="bbs-feed-tag bbs-feed-tag-digest">精选</span><?php } ?>
+						<?php if(!empty($_thread['mod_recommend'])) { ?><span class="bbs-feed-tag bbs-feed-tag-mod">版主推荐</span><?php } ?>
 					</div>
 				</div>
 				<?php }} else { ?>
