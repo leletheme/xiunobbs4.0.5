@@ -47,7 +47,7 @@
 				<?php if($threadlist) { foreach($threadlist as &$_thread) { $_forum = array_value($forumlist, $_thread['fid'], array('name'=>'默认版块')); ?>
 				<div class="bbs-feed-card thread<?php echo $_thread['top'] > 0 ? ' bbs-feed-card-top' : ''; ?><?php echo !empty($_thread['digest']) ? ' bbs-feed-card-digest' : ''; ?><?php echo !empty($_thread['mod_recommend']) ? ' bbs-feed-card-mod' : ''; ?>" data-tid="<?php echo $_thread['tid'];?>">
 					<?php if(!empty($_thread['allowtop'])) { ?><input type="checkbox" name="modtid" class="bbs-feed-check" value="<?php echo $_thread['tid'];?>" /><?php } ?>
-					<?php if($_thread['top'] > 0) { ?><div class="bbs-feed-corner bbs-feed-corner-top"><span>置顶</span></div><?php } elseif(!empty($_thread['digest'])) { ?><div class="bbs-feed-corner bbs-feed-corner-digest"><span>精选</span></div><?php } elseif(!empty($_thread['mod_recommend'])) { ?><div class="bbs-feed-corner bbs-feed-corner-mod"><span>版推</span></div><?php } ?>
+					<?php if($_thread['top'] > 0) { ?><div class="bbs-feed-corner bbs-feed-corner-top"><span>置顶</span></div><?php } elseif(!empty($_thread['digest'])) { ?><div class="bbs-feed-corner bbs-feed-corner-digest"><span>精华</span></div><?php } elseif(!empty($_thread['mod_recommend'])) { ?><div class="bbs-feed-corner bbs-feed-corner-mod"><span>版推</span></div><?php } ?>
 					<div class="bbs-feed-card-body">
 						<h2><a href="<?php echo url("thread-$_thread[tid]");?>"><?php echo $_thread['subject'];?></a></h2>
 						<?php if(!empty($_thread['brief'])) { ?><p><?php echo $_thread['brief'];?></p><?php } ?>
@@ -133,7 +133,7 @@
 					<a class="bbs-side-rank-row rank-<?php echo $rank_i;?>" href="<?php echo url("user-$_rank_user[uid]");?>">
 						<img src="<?php echo $_rank_user['avatar_url'];?>">
 						<span><strong><?php echo $_rank_user['username'];?></strong><em><?php echo $_rank['field'];?> <?php echo intval($_rank_user[$_rank['value']]);?><?php if(isset($_rank['field2'])) { ?> · <?php echo $_rank['field2'];?> <?php echo intval($_rank_user[$_rank['value2']]);?><?php } ?></em></span>
-						<b>￥<?php echo $rank_i++;?></b>
+						<b><i class="icon-trophy"></i><small><?php echo $rank_i++;?></small></b>
 					</a>
 					<?php }} else { ?>
 					<div class="bbs-side-empty">暂无数据</div>
