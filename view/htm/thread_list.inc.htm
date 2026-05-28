@@ -30,9 +30,9 @@
 								<!--{hook thread_list_inc_top_icon_before.htm}-->
 								<?php if($_thread['top'] > 0) { ?>
 									<i class="icon-top-<?php echo $_thread['top']; ?>"></i>
-									<span class="bbs-thread-badge bbs-thread-badge-top">置顶</span>
+									<span class="bbs-dz-label bbs-dz-label-top">置顶</span>
 								<?php } ?>
-								<?php if(!empty($_thread['digest'])) { ?><span class="bbs-thread-badge bbs-thread-badge-digest">精选</span><?php } ?>
+								<?php if(!empty($_thread['digest'])) { ?><span class="bbs-dz-label bbs-dz-label-digest">精华</span><?php } ?>
 								<?php if(!empty($_thread['mod_recommend'])) { ?><span class="bbs-thread-badge bbs-thread-badge-mod">版主推荐</span><?php } ?>
 								<!--{hook thread_list_inc_subject_top_after.htm}-->
 								
